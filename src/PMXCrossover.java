@@ -2,13 +2,13 @@ import java.util.Random;
 
 public class PMXCrossover {
     static int[][] pmxCrossover(int[] parent1, int[] parent2) {
-        int[] replacement1 = new int[parent1.length+1];
-        int[] replacement2 = new int[parent1.length+1];
+        int[] replacement1 = new int[parent1.length + 1];
+        int[] replacement2 = new int[parent1.length + 1];
         int i, n1, m1, n2, m2;
         int swap;
 
         int[] offSpring1 = new int[parent1.length];
-        int [] offSpring2 = new int[parent1.length];
+        int[] offSpring2 = new int[parent1.length];
 
         int[][] offSprings = new int[2][];
 
@@ -27,12 +27,12 @@ public class PMXCrossover {
             cuttingPoint2 = swap;
         }
 
-        for (i=0; i < parent1.length+1; i++) {
+        for (i = 0; i < parent1.length + 1; i++) {
             replacement1[i] = -1;
             replacement2[i] = -1;
         }
 
-        for (i=cuttingPoint1; i <= cuttingPoint2; i++) {
+        for (i = cuttingPoint1; i <= cuttingPoint2; i++) {
             offSpring1[i] = parent2[i];
             offSpring2[i] = parent1[i];
             replacement1[parent2[i]] = parent1[i];

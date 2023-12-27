@@ -1,45 +1,59 @@
+import java.util.Arrays;
+
 public class Results {
-    private String executionTime;
+    private long executionTime;
     private int[] bestPath;
     private int distance;
     private int iterations;
 
     public Results(int matrixSize) {
-        this.executionTime = "0";
+        this.executionTime = 0;
         this.bestPath = new int[matrixSize];
         this.distance = 0;
         this.iterations = 0;
     }
 
-    public String getExecutionTime() {
+    public synchronized long getExecutionTime() {
         return executionTime;
     }
 
-    public void setExecutionTime(String executionTime) {
+    public synchronized void setExecutionTime(long executionTime) {
         this.executionTime = executionTime;
     }
 
-    public int[] getBestPath() {
+    public synchronized int[] getBestPath() {
         return bestPath;
     }
 
-    public void setBestPath(int[] bestPath) {
+    public synchronized void setBestPath(int[] bestPath) {
         this.bestPath = bestPath;
     }
 
-    public int getDistance() {
+    public synchronized int getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public synchronized void setDistance(int distance) {
         this.distance = distance;
     }
 
-    public int getIterations() {
+    public synchronized int getIterations() {
         return iterations;
     }
 
-    public void setIterations(int iterations) {
+    public synchronized void setIterations(int iterations) {
         this.iterations = iterations;
+    }
+
+    @Override
+    public synchronized String toString() {
+        String out = "";
+
+        out += "Melhor caminho: " + Arrays.toString(getBestPath());
+        out += "\nDistância: " + getDistance();
+        out += "\nTempo: " + getExecutionTime() + " ms";
+        out += "\nIterações: " + getIterations();
+
+        return out;
     }
 }
