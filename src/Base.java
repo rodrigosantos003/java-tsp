@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-public class Main {
+public class Base {
     static Results[] results; //Resultados
 
     static class TSPThread extends Thread {
@@ -29,6 +29,11 @@ public class Main {
             this.iterations = 0;
             this.isRunning = true;
             this.threadIndex = threadIndex;
+
+            //Inicializa as populações
+            for (int i = 0; i < populationSize; i++) {
+                population.add(Utilities.generateRandomPath(distances.length));
+            }
         }
 
         public ArrayList<int[]> getPopulation() {
@@ -61,11 +66,6 @@ public class Main {
 
         @Override
         public void run() {
-            //Inicializa as populações
-            for (int i = 0; i < populationSize; i++) {
-                population.add(Utilities.generateRandomPath(distances.length));
-            }
-
             startTime = System.currentTimeMillis();
 
             bestDistance = Utilities.calculateDistance(population.get(0), distances);
@@ -101,7 +101,7 @@ public class Main {
                 }
             }
 
-            Utilities.updateValues(results, this);
+            Utilities.updateBaseValues(results, this);
         }
     }
 

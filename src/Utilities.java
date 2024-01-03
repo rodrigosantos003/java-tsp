@@ -114,12 +114,28 @@ public class Utilities {
     }
 
     /**
-     * Atualiza os valores da memória central
+     * Atualiza os valores da memória central (algoritmo base)
      *
      * @param results Array de resultados
      * @param thread  Thread a atualizar
      */
-    static void updateValues(Results[] results, Main.TSPThread thread) {
+    static void updateBaseValues(Results[] results, Base.TSPThread thread) {
+        int index = thread.getThreadIndex();
+        int[] path = thread.getPopulation().get(0);
+
+        results[index].setBestPath(path);
+        results[index].setDistance(thread.getBestDistance());
+        results[index].setExecutionTime(thread.getEndTime() - thread.getStartTime());
+        results[index].setIterations(thread.getIterations());
+    }
+
+    /**
+     * Atualiza os valores da memória central (algorimoAvançado)
+     *
+     * @param results Array de resultados
+     * @param thread  Thread a atualizar
+     */
+    static void updateAdvancedValues(Results[] results, Advanced.TSPThread thread) {
         int index = thread.getThreadIndex();
         int[] path = thread.getPopulation().get(0);
 
