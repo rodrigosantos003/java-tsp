@@ -143,6 +143,7 @@ public class Utilities {
         results[index].setDistance(thread.getBestDistance());
         results[index].setExecutionTime(thread.getEndTime() - thread.getStartTime());
         results[index].setIterations(thread.getIterations());
+        results[index].setBestDistanceCounter(thread.getBestDistanceCounter());
     }
 
     /**

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -12,14 +13,15 @@ public class Advanced {
         private final float mutationChance; //Probabilidade de mutação
         private final int[][] distances; //Matriz de distâncias
         private int bestDistance; //Melhor distância
-        private long startTime; //Tempo inicial
+        private final long startTime; //Tempo inicial
         private long endTime; //Tempo final
         private int iterations; //Iterações
+        private int bestDistanceCounter;
 
         private boolean isRunning; //Condição de execução
         private final int threadIndex; //Índice de criação da thread
-
-        private final Object lock;
+        private volatile boolean paused = false;
+        private final Object pauseLock = new Object();
 
         public TSPThread(int populationSize, float mutationChance, int[][] distances, int threadIndex) {
             this.populationSize = populationSize;
@@ -31,8 +33,7 @@ public class Advanced {
             this.iterations = 0;
             this.isRunning = true;
             this.threadIndex = threadIndex;
-
-            this.lock = new Object();
+            this.bestDistanceCounter = 0;
 
             //Inicializa as populações
             for (int i = 0; i < populationSize; i++) {
@@ -72,26 +73,37 @@ public class Advanced {
             return threadIndex;
         }
 
-        public void pauseThread(){
-            synchronized (lock) {
-                try {
-                    lock.wait(); // Thread 1 waits until notified
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        public void pauseThread() {
+            paused = true;
+        }
+
+        public void resumeThread() {
+            synchronized (pauseLock) {
+                paused = false;
+                pauseLock.notifyAll();
             }
         }
 
-        public void resumeThread(){
-            lock.notifyAll();
+        public int getBestDistanceCounter() {
+            return bestDistanceCounter;
         }
 
         @Override
         public void run() {
-
             bestDistance = Utilities.calculateDistance(population.get(0), distances);
+            endTime = System.currentTimeMillis();
 
             while (isRunning) {
+                synchronized (pauseLock) {
+                    while (paused) {
+                        try {
+                            pauseLock.wait();
+                        } catch (InterruptedException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+
                 iterations++;
 
                 //Ordena a população
@@ -116,9 +128,14 @@ public class Advanced {
                 }
 
                 int currentBestDistance = Utilities.calculateDistance(population.get(0), distances);
+
+                if(currentBestDistance == bestDistance)
+                    bestDistanceCounter++;
+
                 if (currentBestDistance < bestDistance) {
                     bestDistance = currentBestDistance;
                     endTime = System.currentTimeMillis();
+                    bestDistanceCounter = 1;
                 }
             }
 
@@ -126,24 +143,18 @@ public class Advanced {
         }
     }
 
-    public static void executeMerge(int mergeAmount, float mergeTime, TSPThread[] threads, int[][] distances, int popSize){
+    public static void executeMerge(int mergeAmount, float mergeTime, TSPThread[] threads, int[][] distances, int popSize) {
         CompletableFuture.delayedExecutor((long) mergeTime, TimeUnit.SECONDS).execute(() -> {
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA");
             ArrayList<int[]> populations = new ArrayList<>();
 
-            for(int i = 0; i < threads.length; i++){
-                System.out.println("124");
-                threads[i].pauseThread();
-                System.out.println("r43223");
+            for (TSPThread thread : threads) {
+                thread.pauseThread();
             }
 
-            System.out.println("BBBBBBBBBBBBBBBBBBBBB");
-
-            for(TSPThread thread : threads){
-                populations.addAll(thread.getPopulation());
+            for (TSPThread thread : threads) {
+                // Crie uma cópia da população da thread para evitar ConcurrentModificationException
+                populations.addAll(new ArrayList<>(thread.getPopulation()));
             }
-
-            System.out.println("CCCCCCCCCCCCCCCCC");
 
             populations.sort((path1, path2) -> {
                 int distance1 = Utilities.calculateDistance(path1, distances);
@@ -153,26 +164,27 @@ public class Advanced {
 
             populations = new ArrayList<>(populations.subList(0, popSize));
 
-            for(TSPThread thread : threads){
-                thread.setPopulation(populations);
+            for (TSPThread thread : threads) {
+                // Crie uma cópia da população para evitar ConcurrentModificationException
+                thread.setPopulation(new ArrayList<>(populations));
             }
 
-            System.out.println("DDDDDDDDDDDDDDDDDDDD");
-
-
-            for(TSPThread thread : threads){
+            for (TSPThread thread : threads) {
                 thread.resumeThread();
             }
 
-            if(mergeAmount > 0)
-                executeMerge(mergeAmount-1, mergeTime, threads, distances, popSize);
+            System.out.println(Arrays.toString(populations.get(0)));
+
+            if (mergeAmount > 0)
+                executeMerge(mergeAmount - 1, mergeTime, threads, distances, popSize);
         });
     }
+
 
     public static void main(String[] args) {
         if (args.length != 6) {
             System.out.println("ERRO: Número de argumentos inválido!");
-            System.out.println("Formato correto dos argumentos: <file_name> <threads> <time> <population> <mutation>");
+            System.out.println("Formato correto dos argumentos: <file_name> <threads> <time> <population> <mutation> <merge_time_percentage>");
 
             System.exit(-1);
         }
@@ -202,7 +214,7 @@ public class Advanced {
             threads[i].start();
         }
 
-        executeMerge((int) Math.floor(mergeAmount) -1, mergeTime, threads, distances, populationSize);
+        executeMerge((int) Math.floor(mergeAmount) - 1, mergeTime, threads, distances, populationSize);
 
         //Após o tempo definido, terminar as threads
         CompletableFuture.delayedExecutor(time, TimeUnit.SECONDS).execute(() -> {
