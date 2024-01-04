@@ -1,9 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Random;
-import java.util.Scanner;
+import java.io.IOException;
+import java.util.*;
 
 public class Utilities {
     /**
@@ -153,5 +151,23 @@ public class Utilities {
         Arrays.sort(results, Comparator.comparing(Results::getDistance));
 
         System.out.println(results[0].toString());
+    }
+
+    static void exportResults(Results[] results, String fileName, int executionTime, int nThreads, int popSize, float mutationChance) throws IOException {
+        Arrays.sort(results, Comparator.comparing(Results::getDistance));
+
+        List<List<String>> data = List.of(
+                Arrays.asList(fileName,
+                        String.valueOf(executionTime),
+                        String.valueOf(nThreads),
+                        String.valueOf(popSize),
+                        String.valueOf(mutationChance),
+                        Arrays.toString(results[0].getBestPath()),
+                        String.valueOf(results[0].getDistance()),
+                        String.valueOf(results[0].getIterations()),
+                        String.valueOf(results[0].getExecutionTime()))
+        );
+
+        CSVWriter.writeToCSV("dados.csv", data);
     }
 }

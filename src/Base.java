@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
@@ -72,6 +73,9 @@ public class Base {
             endTime = System.currentTimeMillis();
             int localIterations = 0;
 
+            int idx1 = populationSize - 2;
+            int idx2 = populationSize - 1;
+
             while (isRunning) {
                 localIterations++;
 
@@ -80,16 +84,15 @@ public class Base {
 
                 //Aplicação do crossover
                 int[][] pmxResult = PMXCrossover.pmxCrossover(population.get(0).getPath(), population.get(1).getPath());
-                population.set(populationSize - 2, new Individual(pmxResult[0], distances));
-                population.set(populationSize - 1,  new Individual(pmxResult[1], distances));
+                population.set(idx1, new Individual(pmxResult[0], distances));
+                population.set(idx2,  new Individual(pmxResult[1], distances));
 
                 //Mutação dos elementos
-                Random rand = new Random();
                 float mutationValue = rand.nextFloat(1);
 
                 if (mutationValue < mutationChance) {
-                    population.set(populationSize - 2, new Individual(Utilities.elementRandomSwitch(population.get(populationSize - 2).getPath(), rand), distances));
-                    population.set(populationSize - 1, new Individual(Utilities.elementRandomSwitch(population.get(populationSize - 1).getPath(), rand), distances));
+                    population.set(idx2, new Individual(Utilities.elementRandomSwitch(population.get(idx1).getPath(), rand), distances));
+                    population.set(idx1, new Individual(Utilities.elementRandomSwitch(population.get(idx2).getPath(), rand), distances));
                 }
 
                 int currentBestDistance = Utilities.calculateDistance(population.get(0).getPath(), distances);
@@ -150,5 +153,11 @@ public class Base {
         }
 
         Utilities.showResults(results);
+
+        try {
+            Utilities.exportResults(results, fileName, time, nThreads, populationSize, mutationChance);
+        } catch (IOException e) {
+            System.out.println("ERRO: " + e.getMessage());
+        }
     }
 }

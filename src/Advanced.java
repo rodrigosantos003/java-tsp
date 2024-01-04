@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
@@ -89,7 +90,7 @@ public class Advanced {
             endTime = System.currentTimeMillis();
             int localIterations = 0;
 
-            int idx1 = populationSize - 2; // Calculate these indices once outside the loop
+            int idx1 = populationSize - 2;
             int idx2 = populationSize - 1;
 
             while (isRunning) {
@@ -222,5 +223,11 @@ public class Advanced {
         }
 
         Utilities.showResults(results);
+
+        try {
+            Utilities.exportResults(results, fileName, time, nThreads, populationSize, mutationChance);
+        } catch (IOException e) {
+            System.out.println("ERRO: " + e.getMessage());
+        }
     }
 }
