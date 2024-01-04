@@ -1,13 +1,15 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Base {
     static Results[] results; //Resultados
+    static Random rand = new Random();
 
     static class TSPThread extends Thread {
-        private final ArrayList<int[]> population = new ArrayList<>(); //População
+        private final ArrayList<Individual> population = new ArrayList<>(); //População
         private final int populationSize; //Tamanho da população
         private final float mutationChance; //Probabilidade de mutação
         private final int[][] distances; //Matriz de distâncias
@@ -32,11 +34,11 @@ public class Base {
 
             //Inicializa as populações
             for (int i = 0; i < populationSize; i++) {
-                population.add(Utilities.generateRandomPath(distances.length));
+                population.add(new Individual(Utilities.generateRandomPath(distances.length, rand), distances));
             }
         }
 
-        public ArrayList<int[]> getPopulation() {
+        public ArrayList<Individual> getPopulation() {
             return population;
         }
 
@@ -66,37 +68,35 @@ public class Base {
 
         @Override
         public void run() {
-            bestDistance = Utilities.calculateDistance(population.get(0), distances);
+            bestDistance = population.get(0).getDistance();
             endTime = System.currentTimeMillis();
+            int localIterations = 0;
 
             while (isRunning) {
-                iterations++;
+                localIterations++;
 
                 //Ordena a população
-                population.sort((path1, path2) -> {
-                    int distance1 = Utilities.calculateDistance(path1, distances);
-                    int distance2 = Utilities.calculateDistance(path2, distances);
-                    return Integer.compare(distance1, distance2);
-                });
+                population.sort(Comparator.comparing(Individual::getDistance));
 
                 //Aplicação do crossover
-                int[][] pmxResult = PMXCrossover.pmxCrossover(population.get(0), population.get(1));
-                population.set(populationSize - 2, pmxResult[0]);
-                population.set(populationSize - 1, pmxResult[1]);
+                int[][] pmxResult = PMXCrossover.pmxCrossover(population.get(0).getPath(), population.get(1).getPath());
+                population.set(populationSize - 2, new Individual(pmxResult[0], distances));
+                population.set(populationSize - 1,  new Individual(pmxResult[1], distances));
 
                 //Mutação dos elementos
                 Random rand = new Random();
                 float mutationValue = rand.nextFloat(1);
 
                 if (mutationValue < mutationChance) {
-                    population.set(populationSize - 2, Utilities.elementRandomSwitch(population.get(populationSize - 2), rand));
-                    population.set(populationSize - 1, Utilities.elementRandomSwitch(population.get(populationSize - 1), rand));
+                    population.set(populationSize - 2, new Individual(Utilities.elementRandomSwitch(population.get(populationSize - 2).getPath(), rand), distances));
+                    population.set(populationSize - 1, new Individual(Utilities.elementRandomSwitch(population.get(populationSize - 1).getPath(), rand), distances));
                 }
 
-                int currentBestDistance = Utilities.calculateDistance(population.get(0), distances);
+                int currentBestDistance = Utilities.calculateDistance(population.get(0).getPath(), distances);
                 if (currentBestDistance < bestDistance) {
                     bestDistance = currentBestDistance;
                     endTime = System.currentTimeMillis();
+                    iterations = localIterations;
                 }
             }
 

@@ -65,11 +65,10 @@ public class Utilities {
      * @param size Tamanho do caminho
      * @return Caminho aleatório
      */
-    static int[] generateRandomPath(int size) {
+    static int[] generateRandomPath(int size, Random random) {
         int[] path = new int[size];
 
         int count = 0;
-        Random random = new Random();
 
         while (count < size) {
             int num = random.nextInt(size);
@@ -121,7 +120,7 @@ public class Utilities {
      */
     static void updateBaseValues(Results[] results, Base.TSPThread thread) {
         int index = thread.getThreadIndex();
-        int[] path = thread.getPopulation().get(0);
+        int[] path = thread.getPopulation().get(0).getPath();
 
         results[index].setBestPath(path);
         results[index].setDistance(thread.getBestDistance());
@@ -137,13 +136,12 @@ public class Utilities {
      */
     static void updateAdvancedValues(Results[] results, Advanced.TSPThread thread) {
         int index = thread.getThreadIndex();
-        int[] path = thread.getPopulation().get(0);
+        int[] path = thread.getPopulation().get(0).getPath();
 
         results[index].setBestPath(path);
         results[index].setDistance(thread.getBestDistance());
         results[index].setExecutionTime(thread.getEndTime() - thread.getStartTime());
         results[index].setIterations(thread.getIterations());
-        results[index].setBestDistanceCounter(thread.getBestDistanceCounter());
     }
 
     /**
