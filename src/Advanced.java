@@ -91,6 +91,7 @@ public class Advanced {
         public void run() {
             bestDistance = Utilities.calculateDistance(population.get(0), distances);
             endTime = System.currentTimeMillis();
+            int localIterations = 0;
 
             while (isRunning) {
                 synchronized (pauseLock) {
@@ -103,7 +104,7 @@ public class Advanced {
                     }
                 }
 
-                iterations++;
+                localIterations++;
 
                 //Ordena a população
                 population.sort((path1, path2) -> {
@@ -134,6 +135,7 @@ public class Advanced {
                 if (currentBestDistance < bestDistance) {
                     bestDistance = currentBestDistance;
                     endTime = System.currentTimeMillis();
+                    iterations = localIterations;
                     bestDistanceCounter = 1;
                 }
             }
