@@ -12,7 +12,7 @@ public class Base {
         private final float mutationChance; //Probabilidade de mutação
         private final int[][] distances; //Matriz de distâncias
         private int bestDistance; //Melhor distância
-        private long startTime; //Tempo inicial
+        private final long startTime; //Tempo inicial
         private long endTime; //Tempo final
         private int iterations; //Iterações
 
@@ -24,7 +24,7 @@ public class Base {
             this.mutationChance = mutationChance;
             this.distances = distances;
             this.bestDistance = 0;
-            this.startTime = 0;
+            this.startTime = System.currentTimeMillis();
             this.endTime = 0;
             this.iterations = 0;
             this.isRunning = true;
@@ -66,9 +66,8 @@ public class Base {
 
         @Override
         public void run() {
-            startTime = System.currentTimeMillis();
-
             bestDistance = Utilities.calculateDistance(population.get(0), distances);
+            endTime = System.currentTimeMillis();
 
             while (isRunning) {
                 iterations++;

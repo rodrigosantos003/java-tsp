@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -143,6 +142,14 @@ public class Advanced {
         }
     }
 
+    /**
+     * Junta todas as populações das threads
+     * @param mergeAmount Vezes da execução
+     * @param mergeTime Tempo da junção
+     * @param threads Array de threads
+     * @param distances Matriz de distâncias
+     * @param popSize Tamanho da população
+     */
     public static void executeMerge(int mergeAmount, float mergeTime, TSPThread[] threads, int[][] distances, int popSize) {
         CompletableFuture.delayedExecutor((long) mergeTime, TimeUnit.SECONDS).execute(() -> {
             ArrayList<int[]> populations = new ArrayList<>();
@@ -152,7 +159,6 @@ public class Advanced {
             }
 
             for (TSPThread thread : threads) {
-                // Crie uma cópia da população da thread para evitar ConcurrentModificationException
                 populations.addAll(new ArrayList<>(thread.getPopulation()));
             }
 
@@ -165,15 +171,12 @@ public class Advanced {
             populations = new ArrayList<>(populations.subList(0, popSize));
 
             for (TSPThread thread : threads) {
-                // Crie uma cópia da população para evitar ConcurrentModificationException
                 thread.setPopulation(new ArrayList<>(populations));
             }
 
             for (TSPThread thread : threads) {
                 thread.resumeThread();
             }
-
-            System.out.println(Arrays.toString(populations.get(0)));
 
             if (mergeAmount > 0)
                 executeMerge(mergeAmount - 1, mergeTime, threads, distances, popSize);
