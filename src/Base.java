@@ -1,5 +1,5 @@
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -10,7 +10,7 @@ public class Base {
     static Random rand = new Random();
 
     static class TSPThread extends Thread {
-        private final ArrayList<Individual> population = new ArrayList<>(); //População
+        private final Individual[] population; //População
         private final int populationSize; //Tamanho da população
         private final float mutationChance; //Probabilidade de mutação
         private final int[][] distances; //Matriz de distâncias
@@ -24,6 +24,7 @@ public class Base {
 
         public TSPThread(int populationSize, float mutationChance, int[][] distances, int threadIndex) {
             this.populationSize = populationSize;
+            this.population = new Individual[this.populationSize];
             this.mutationChance = mutationChance;
             this.distances = distances;
             this.bestDistance = 0;
@@ -35,11 +36,11 @@ public class Base {
 
             //Inicializa as populações
             for (int i = 0; i < populationSize; i++) {
-                population.add(new Individual(Utilities.generateRandomPath(distances.length, rand), distances));
+                population[i] = new Individual(Utilities.generateRandomPath(distances.length, rand), distances);
             }
         }
 
-        public ArrayList<Individual> getPopulation() {
+        public Individual[] getPopulation() {
             return population;
         }
 
@@ -69,7 +70,7 @@ public class Base {
 
         @Override
         public void run() {
-            bestDistance = population.get(0).getDistance();
+            bestDistance = population[0].getDistance();
             endTime = System.currentTimeMillis();
             int localIterations = 0;
 
@@ -80,22 +81,23 @@ public class Base {
                 localIterations++;
 
                 //Ordena a população
-                population.sort(Comparator.comparing(Individual::getDistance));
+                Arrays.sort(population, Comparator.comparing(Individual::getDistance));
 
                 //Aplicação do crossover
-                int[][] pmxResult = PMXCrossover.pmxCrossover(population.get(0).getPath(), population.get(1).getPath());
-                population.set(idx1, new Individual(pmxResult[0], distances));
-                population.set(idx2,  new Individual(pmxResult[1], distances));
+                int[][] pmxResult = PMXCrossover.pmxCrossover(population[0].getPath(), population[1].getPath());
+                population[idx1] = new Individual(pmxResult[0], distances);
+                population[idx2] = new Individual(pmxResult[1], distances);
 
                 //Mutação dos elementos
                 float mutationValue = rand.nextFloat(1);
 
                 if (mutationValue < mutationChance) {
-                    population.set(idx2, new Individual(Utilities.elementRandomSwitch(population.get(idx1).getPath(), rand), distances));
-                    population.set(idx1, new Individual(Utilities.elementRandomSwitch(population.get(idx2).getPath(), rand), distances));
+                    population[idx1] = new Individual(Utilities.elementRandomSwitch(population[idx1].getPath(), rand), distances);
+                    population[idx2] = new Individual(Utilities.elementRandomSwitch(population[idx2].getPath(), rand), distances);
                 }
 
-                int currentBestDistance = Utilities.calculateDistance(population.get(0).getPath(), distances);
+                int currentBestDistance = Utilities.calculateDistance(population[0].getPath(), distances);
+
                 if (currentBestDistance < bestDistance) {
                     bestDistance = currentBestDistance;
                     endTime = System.currentTimeMillis();
@@ -106,6 +108,7 @@ public class Base {
             Utilities.updateBaseValues(results, this);
         }
     }
+
 
     public static void main(String[] args) {
         if (args.length != 5) {

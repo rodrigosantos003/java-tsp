@@ -26,6 +26,7 @@ public class ProblemGenerator {
 
     /**
      * Gera o número de cidades
+     *
      * @param exclusions Cidades excluídas
      * @return Número de cidades
      */
@@ -42,6 +43,7 @@ public class ProblemGenerator {
 
     /**
      * Gera coordenadas x e y usando distribuição normal
+     *
      * @param n Tamaho das coordenadas
      * @return Valor das coordenadas
      */
@@ -78,8 +80,9 @@ public class ProblemGenerator {
 
     /**
      * Guarda a matriz num ficheiro de texto
-     * @param file Ficheiro da matriz
-     * @param n Tamanho da matriz
+     *
+     * @param file            Ficheiro da matriz
+     * @param n               Tamanho da matriz
      * @param distancesMatrix Matriz de distâncias
      */
     private static void saveDistancesMatrix(String file, int n, int[][] distancesMatrix) throws IOException {

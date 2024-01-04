@@ -31,6 +31,7 @@ public class Utilities {
             scanner.close();
         } catch (FileNotFoundException e) {
             System.out.println("Erro ao abrir o ficheiro!");
+            System.exit(-1);
         }
 
         return matrix;
@@ -118,7 +119,7 @@ public class Utilities {
      */
     static void updateBaseValues(Results[] results, Base.TSPThread thread) {
         int index = thread.getThreadIndex();
-        int[] path = thread.getPopulation().get(0).getPath();
+        int[] path = thread.getPopulation()[0].getPath();
 
         results[index].setBestPath(path);
         results[index].setDistance(thread.getBestDistance());
@@ -134,7 +135,7 @@ public class Utilities {
      */
     static void updateAdvancedValues(Results[] results, Advanced.TSPThread thread) {
         int index = thread.getThreadIndex();
-        int[] path = thread.getPopulation().get(0).getPath();
+        int[] path = thread.getPopulation()[0].getPath();
 
         results[index].setBestPath(path);
         results[index].setDistance(thread.getBestDistance());
@@ -156,17 +157,7 @@ public class Utilities {
     static void exportResults(Results[] results, String fileName, int executionTime, int nThreads, int popSize, float mutationChance) throws IOException {
         Arrays.sort(results, Comparator.comparing(Results::getDistance));
 
-        List<List<String>> data = List.of(
-                Arrays.asList(fileName,
-                        String.valueOf(executionTime),
-                        String.valueOf(nThreads),
-                        String.valueOf(popSize),
-                        String.valueOf(mutationChance),
-                        Arrays.toString(results[0].getBestPath()),
-                        String.valueOf(results[0].getDistance()),
-                        String.valueOf(results[0].getIterations()),
-                        String.valueOf(results[0].getExecutionTime()))
-        );
+        List<List<String>> data = List.of(Arrays.asList(fileName, String.valueOf(executionTime), String.valueOf(nThreads), String.valueOf(popSize), String.valueOf(mutationChance), Arrays.toString(results[0].getBestPath()), String.valueOf(results[0].getDistance()), String.valueOf(results[0].getIterations()), String.valueOf(results[0].getExecutionTime())));
 
         CSVWriter.writeToCSV("dados.csv", data);
     }

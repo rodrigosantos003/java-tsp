@@ -1,5 +1,5 @@
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -10,7 +10,7 @@ public class Advanced {
     static Random rand = new Random();
 
     static class TSPThread extends Thread {
-        private ArrayList<Individual> population = new ArrayList<>(); //População
+        private Individual[] population; //População
         private final int populationSize; //Tamanho da população
         private final float mutationChance; //Probabilidade de mutação
         private final int[][] distances; //Matriz de distâncias
@@ -26,6 +26,7 @@ public class Advanced {
 
         public TSPThread(int populationSize, float mutationChance, int[][] distances, int threadIndex) {
             this.populationSize = populationSize;
+            this.population = new Individual[this.populationSize];
             this.mutationChance = mutationChance;
             this.distances = distances;
             this.bestDistance = 0;
@@ -37,15 +38,15 @@ public class Advanced {
 
             //Inicializa as populações
             for (int i = 0; i < populationSize; i++) {
-                population.add(new Individual(Utilities.generateRandomPath(distances.length, rand), distances));
+                population[i] = new Individual(Utilities.generateRandomPath(distances.length, rand), distances);
             }
         }
 
-        public ArrayList<Individual> getPopulation() {
+        public Individual[] getPopulation() {
             return population;
         }
 
-        public void setPopulation(ArrayList<Individual> population) {
+        public void setPopulation(Individual[] population) {
             this.population = population;
         }
 
@@ -86,7 +87,7 @@ public class Advanced {
 
         @Override
         public void run() {
-            bestDistance = population.get(0).getDistance();
+            bestDistance = population[0].getDistance();
             endTime = System.currentTimeMillis();
             int localIterations = 0;
 
@@ -107,22 +108,22 @@ public class Advanced {
                 localIterations++;
 
                 //Ordena a população
-                population.sort(Comparator.comparing(Individual::getDistance));
+                Arrays.sort(population, Comparator.comparing(Individual::getDistance));
 
                 //Aplicação do crossover
-                int[][] pmxResult = PMXCrossover.pmxCrossover(population.get(0).getPath(), population.get(1).getPath());
-                population.set(idx1, new Individual(pmxResult[0], distances));
-                population.set(idx2,  new Individual(pmxResult[1], distances));
+                int[][] pmxResult = PMXCrossover.pmxCrossover(population[0].getPath(), population[1].getPath());
+                population[idx1] = new Individual(pmxResult[0], distances);
+                population[idx2] = new Individual(pmxResult[1], distances);
 
                 //Mutação dos elementos
                 float mutationValue = rand.nextFloat(1);
 
                 if (mutationValue < mutationChance) {
-                    population.set(idx1, new Individual(Utilities.elementRandomSwitch(population.get(idx1).getPath(), rand), distances));
-                    population.set(idx2, new Individual(Utilities.elementRandomSwitch(population.get(idx2).getPath(), rand), distances));
+                    population[idx1] = new Individual(Utilities.elementRandomSwitch(population[idx1].getPath(), rand), distances);
+                    population[idx2] = new Individual(Utilities.elementRandomSwitch(population[idx2].getPath(), rand), distances);
                 }
 
-                int currentBestDistance = Utilities.calculateDistance(population.get(0).getPath(), distances);
+                int currentBestDistance = Utilities.calculateDistance(population[0].getPath(), distances);
 
                 if (currentBestDistance < bestDistance) {
                     bestDistance = currentBestDistance;
@@ -137,31 +138,31 @@ public class Advanced {
 
     /**
      * Junta todas as populações das threads
+     *
      * @param mergeAmount Vezes da execução
-     * @param mergeTime Tempo da junção
-     * @param threads Array de threads
-     * @param popSize Tamanho da população
+     * @param mergeTime   Tempo da junção
+     * @param threads     Array de threads
+     * @param popSize     Tamanho da população
      */
-    public static void executeMerge(int mergeAmount, float mergeTime, TSPThread[] threads, int popSize) {
-        if(mergeAmount == 0) return;
+    static void executeMerge(int mergeAmount, float mergeTime, TSPThread[] threads, int popSize) {
+        if (mergeAmount == 0) return;
 
         CompletableFuture.delayedExecutor((long) mergeTime, TimeUnit.SECONDS).execute(() -> {
-            ArrayList<Individual> populations = new ArrayList<>();
+            Individual[] populations = new Individual[threads.length * popSize];
+            int index = 0;
 
             for (TSPThread thread : threads) {
                 thread.pauseThread();
+                System.arraycopy(thread.getPopulation(), 0, populations, index, popSize);
+                index += popSize;
             }
 
-            for (TSPThread thread : threads) {
-                populations.addAll(new ArrayList<>(thread.getPopulation()));
-            }
+            Arrays.sort(populations, Comparator.comparing(Individual::getDistance));
 
-            populations.sort(Comparator.comparing(Individual::getDistance));
-
-            populations.subList(popSize, populations.size()).clear();
+            Individual[] newPopulations = Arrays.copyOfRange(populations, 0, popSize * threads.length);
 
             for (TSPThread thread : threads) {
-                thread.setPopulation(new ArrayList<>(populations));
+                thread.setPopulation(Arrays.copyOf(newPopulations, popSize));
                 thread.resumeThread();
             }
 
