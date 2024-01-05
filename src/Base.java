@@ -28,7 +28,7 @@ public class Base {
             this.mutationChance = mutationChance;
             this.distances = distances;
             this.bestDistance = 0;
-            this.startTime = System.currentTimeMillis();
+            this.startTime = System.nanoTime();
             this.endTime = 0;
             this.iterations = 0;
             this.isRunning = true;
@@ -71,7 +71,7 @@ public class Base {
         @Override
         public void run() {
             bestDistance = population[0].getDistance();
-            endTime = System.currentTimeMillis();
+            endTime = System.nanoTime();
             int localIterations = 0;
 
             int idx1 = populationSize - 2;
@@ -100,7 +100,7 @@ public class Base {
 
                 if (currentBestDistance < bestDistance) {
                     bestDistance = currentBestDistance;
-                    endTime = System.currentTimeMillis();
+                    endTime = System.nanoTime();
                     iterations = localIterations;
                 }
             }

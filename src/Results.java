@@ -13,8 +13,8 @@ public class Results {
         this.iterations = 0;
     }
 
-    public synchronized long getExecutionTime() {
-        return executionTime;
+    public synchronized double getExecutionTime() {
+        return executionTime / 1_000_000.0; //Tempo convertido em milisegundos
     }
 
     public synchronized void setExecutionTime(long executionTime) {
@@ -45,13 +45,20 @@ public class Results {
         this.iterations = iterations;
     }
 
+    private String writeTime(){
+        String time = "\nTempo: ";
+        double value = getExecutionTime();
+
+        return time + (value < 1000 ? value + " ms" : String.format("%.2f", (value / 1000)) + " s");
+    }
+
     @Override
     public synchronized String toString() {
         String out = "";
 
         out += "Melhor caminho: " + Arrays.toString(getBestPath());
         out += "\nDistância: " + getDistance();
-        out += "\nTempo: " + getExecutionTime() + " ms";
+        out += writeTime();
         out += "\nIterações: " + getIterations();
 
         return out;
