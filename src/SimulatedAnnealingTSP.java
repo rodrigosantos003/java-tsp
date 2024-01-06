@@ -81,6 +81,8 @@ public class SimulatedAnnealingTSP {
             int currentDistance = Utilities.calculateDistance(currentSolution, distances);
 
             while (isRunning) {
+                iterations++;
+
                 int[] newSolution = Utilities.elementRandomSwitch(currentSolution, rand);
                 int newDistance = Utilities.calculateDistance(newSolution, distances);
 
@@ -93,7 +95,6 @@ public class SimulatedAnnealingTSP {
                     bestDistance = currentDistance;
                     bestPath = currentSolution;
                     endTime = System.nanoTime();
-                    iterations++;
                 }
 
                 //Lowers the temperature
