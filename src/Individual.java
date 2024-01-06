@@ -1,6 +1,6 @@
 public class Individual {
-    private int[] path;
-    private int distance;
+    private final int[] path;
+    private final int distance;
 
     public int getDistance() {
         return distance;

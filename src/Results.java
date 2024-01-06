@@ -45,6 +45,11 @@ public class Results {
         this.iterations = iterations;
     }
 
+
+    /**
+     * Escreve o tempo de execução
+     * @return Tempo de execução com respetivas unidades
+     */
     private String writeTime(){
         String time = "\nTempo: ";
         double value = getExecutionTime();

@@ -1,96 +1,154 @@
-import jdk.jshell.execution.Util;
-
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class SimulatedAnnealingTSP {
+    static Results[] results;
+    static Random rand = new Random();
 
-    private static final double INITIAL_TEMPERATURE = 100;
-    private static final double COOLING_RATE = 0.9999999999999;
-    private static final int NUM_ITERATIONS = 1000000000;
+    static class TSPThread extends Thread {
+        private double temperature;
+        private final double coolingRate;
+        private final int[][] distances;
+        private int bestDistance;
+        private int[] bestPath;
+        private final long startTime;
+        private long endTime;
+        private int iterations;
+        private boolean isRunning;
+        private final int threadIndex;
 
-    public static void main(String[] args) {
-        // Example usage
-        int[][] distances = Utilities.generateMatrix("fri26.txt");
+        public TSPThread(double temperature, double coolingRate, int[][] distances, int threadIndex) {
+            this.temperature = temperature;
+            this.coolingRate = coolingRate;
+            this.distances = distances;
+            this.bestDistance = Integer.MAX_VALUE;
+            this.startTime = System.nanoTime();
+            this.endTime = 0;
+            this.iterations = 0;
+            this.isRunning = true;
+            this.threadIndex = threadIndex;
+        }
 
-        int[] solution = simulatedAnnealingTSP(distances);
+        public int getBestDistance() {
+            return bestDistance;
+        }
 
-        System.out.println("Optimal Tour: " + Arrays.toString(solution));
-        System.out.println("Total Distance: " + calculateTotalDistance(solution, distances));
-    }
+        public int[] getBestPath() {
+            return bestPath;
+        }
 
-    private static int[] simulatedAnnealingTSP(int[][] distances) {
-        int numCities = distances.length;
-        int[] currentSolution = generateRandomSolution(numCities);
-        double currentEnergy = calculateTotalDistance(currentSolution, distances);
+        public long getStartTime() {
+            return startTime;
+        }
 
-        double temperature = INITIAL_TEMPERATURE;
+        public long getEndTime() {
+            return endTime;
+        }
 
-        for (int iteration = 0; iteration < NUM_ITERATIONS; iteration++) {
-            int[] newSolution = generateNeighborSolution(currentSolution);
-            double newEnergy = calculateTotalDistance(newSolution, distances);
+        public int getIterations() {
+            return iterations;
+        }
 
-            if (acceptMove(currentEnergy, newEnergy, temperature)) {
-                currentSolution = Arrays.copyOf(newSolution, newSolution.length);
-                currentEnergy = newEnergy;
+        public void setRunning(boolean running) {
+            isRunning = running;
+        }
+
+        public int getThreadIndex() {
+            return threadIndex;
+        }
+
+        /**
+         * Determina se a nova solução é aceitável
+         * @param currentDistance Distância atual
+         * @param newDistance Nova distância
+         * @param temperature Temperatura atual
+         * @return TRUE em caso afirmativo, FALSE caso contrário
+         */
+        private static boolean acceptNewSolution(double currentDistance, double newDistance, double temperature) {
+            if (newDistance < currentDistance) {
+                return true;
+            } else {
+                double probability = Math.exp((currentDistance - newDistance) / temperature);
+                return Math.random() < probability;
+            }
+        }
+
+        @Override
+        public void run() {
+            int[] currentSolution = Utilities.generateRandomPath(distances.length, rand);
+            int currentDistance = Utilities.calculateDistance(currentSolution, distances);
+
+            while (isRunning) {
+                int[] newSolution = Utilities.elementRandomSwitch(currentSolution, rand);
+                int newDistance = Utilities.calculateDistance(newSolution, distances);
+
+                if (acceptNewSolution(currentDistance, newDistance, temperature)) {
+                    currentSolution = Arrays.copyOf(newSolution, newSolution.length);
+                    currentDistance = newDistance;
+                }
+
+                if (currentDistance < bestDistance) {
+                    bestDistance = currentDistance;
+                    bestPath = currentSolution;
+                    endTime = System.nanoTime();
+                    iterations++;
+                }
+
+                //Lowers the temperature
+                temperature *= coolingRate;
             }
 
-            temperature *= COOLING_RATE;
-        }
-
-        return currentSolution;
-    }
-
-    private static int[] generateRandomSolution(int numCities) {
-        int[] solution = new int[numCities];
-        for (int i = 0; i < numCities; i++) {
-            solution[i] = i;
-        }
-        shuffleArray(solution);
-        return solution;
-    }
-
-    private static void shuffleArray(int[] array) {
-        Random random = new Random();
-        for (int i = array.length - 1; i > 0; i--) {
-            int index = random.nextInt(i + 1);
-            int temp = array[i];
-            array[i] = array[index];
-            array[index] = temp;
+            Utilities.updateSAValues(results, this);
         }
     }
 
-    private static int[] generateNeighborSolution(int[] solution) {
-        int[] neighborSolution = Arrays.copyOf(solution, solution.length);
-        Random random = new Random();
+    public static void main(String[] args) {
+        if (args.length != 5) {
+            System.out.println("ERRO: Número de argumentos inválido!");
+            System.out.println("Formato correto dos argumentos: <file_name> <threads> <time> <initial_temperature> <cooling_rate>");
 
-        int swapIndex1 = random.nextInt(solution.length);
-        int swapIndex2 = random.nextInt(solution.length);
-
-        // Swap two cities in the solution
-        int temp = neighborSolution[swapIndex1];
-        neighborSolution[swapIndex1] = neighborSolution[swapIndex2];
-        neighborSolution[swapIndex2] = temp;
-
-        return neighborSolution;
-    }
-
-    private static double calculateTotalDistance(int[] solution, int[][] distances) {
-        double totalDistance = 0;
-        for (int i = 0; i < solution.length - 1; i++) {
-            totalDistance += distances[solution[i]][solution[i + 1]];
+            System.exit(-1);
         }
-        // Add the distance from the last city back to the starting city
-        totalDistance += distances[solution[solution.length - 1]][solution[0]];
-        return totalDistance;
-    }
 
-    private static boolean acceptMove(double currentEnergy, double newEnergy, double temperature) {
-        if (newEnergy < currentEnergy) {
-            return true;
-        } else {
-            double probability = Math.exp((currentEnergy - newEnergy) / temperature);
-            return Math.random() < probability;
+        //Obtém os argumentos
+        String fileName = args[0];
+        int nThreads = Integer.parseInt(args[1]);
+        int time = Integer.parseInt(args[2]);
+        double initialTemperature = Double.parseDouble(args[3]);
+        double coolingRate = Double.parseDouble(args[4]);
+
+        //Inicializa a matriz
+        int[][] distances = Utilities.generateMatrix(fileName);
+
+        TSPThread[] threads = new TSPThread[nThreads];
+
+        results = new Results[nThreads];
+
+        //Início da execução das threads
+        for (int i = 0; i < nThreads; i++) {
+            threads[i] = new TSPThread(initialTemperature, coolingRate, distances, i);
+            results[i] = new Results(distances.length);
+            threads[i].start();
         }
+
+        //Após o tempo definido, terminar as threads
+        CompletableFuture.delayedExecutor(time, TimeUnit.SECONDS).execute(() -> {
+            for (TSPThread thread : threads) {
+                thread.setRunning(false);
+            }
+        });
+
+        //Espera que as threads terminem
+        for (int i = 0; i < nThreads; i++) {
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                System.out.println("ERRO: " + e.getMessage());
+            }
+        }
+
+        Utilities.showResults(results);
     }
 }

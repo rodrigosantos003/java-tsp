@@ -67,48 +67,50 @@ public class Utilities {
     static int[] generateRandomPath(int size, Random random) {
         int[] path = new int[size];
 
-        int count = 0;
-
-        while (count < size) {
-            int num = random.nextInt(size);
-            boolean repeated = false;
-
-            for (int i = 0; i < count; i++) {
-                if (num == path[i]) {
-                    repeated = true;
-                    break;
-                }
-            }
-
-            if (!repeated) {
-                path[count] = num;
-                count++;
-            }
+        for (int i = 0; i < size; i++) {
+            path[i] = i;
         }
 
+        shuffleArray(path, random);
+
         return path;
+    }
+
+
+    /**
+     * Baralha o array, garantindo que cada índice ocorre exatante uma vez
+     *
+     * @param array Array a baralhar
+     * @param rand  Objeto Random
+     */
+    private static void shuffleArray(int[] array, Random rand) {
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = rand.nextInt(i + 1);
+            int temp = array[i];
+            array[i] = array[index];
+            array[index] = temp;
+        }
     }
 
     /**
      * Troca os elementos de um caminho
      *
-     * @param originalPath Caminho original
-     * @param rand         Objeto Random
+     * @param path Caminho a trocar os elementos
+     * @param rand Objeto Random
      * @return Caminho com elementos trocados
      */
-    static int[] elementRandomSwitch(int[] originalPath, Random rand) {
-        int pos1 = rand.nextInt(originalPath.length);
-        int pos2;
+    static int[] elementRandomSwitch(int[] path, Random rand) {
+        int[] neighborSolution = Arrays.copyOf(path, path.length);
 
-        do {
-            pos2 = rand.nextInt(originalPath.length);
-        } while (pos2 == pos1);
+        int swapIndex1 = rand.nextInt(path.length);
+        int swapIndex2 = rand.nextInt(path.length);
 
-        int temp = originalPath[pos1];
-        originalPath[pos1] = originalPath[pos2];
-        originalPath[pos2] = temp;
+        // Swap two cities in the solution
+        int temp = neighborSolution[swapIndex1];
+        neighborSolution[swapIndex1] = neighborSolution[swapIndex2];
+        neighborSolution[swapIndex2] = temp;
 
-        return originalPath;
+        return neighborSolution;
     }
 
     /**
@@ -128,7 +130,7 @@ public class Utilities {
     }
 
     /**
-     * Atualiza os valores da memória central (algorimoAvançado)
+     * Atualiza os valores da memória central (algorimo avançado)
      *
      * @param results Array de resultados
      * @param thread  Thread a atualizar
@@ -142,6 +144,22 @@ public class Utilities {
         results[index].setExecutionTime(thread.getEndTime() - thread.getStartTime());
         results[index].setIterations(thread.getIterations());
     }
+
+    /**
+     * Atualiza os valores da memória central (algorimo Simulated Annealing)
+     *
+     * @param results Array de resultados
+     * @param thread  Thread a atualizar
+     */
+    static void updateSAValues(Results[] results, SimulatedAnnealingTSP.TSPThread thread) {
+        int index = thread.getThreadIndex();
+
+        results[index].setBestPath(thread.getBestPath());
+        results[index].setDistance(thread.getBestDistance());
+        results[index].setExecutionTime(thread.getEndTime() - thread.getStartTime());
+        results[index].setIterations(thread.getIterations());
+    }
+
 
     /**
      * Apresenta os resultados
