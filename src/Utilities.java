@@ -179,4 +179,12 @@ public class Utilities {
 
         CSVWriter.writeToCSV("results.csv", data);
     }
+
+    static void exportSAResults(Results[] results, String fileName, int executionTime, int nThreads, double initialTemperature, double coolingRate) throws IOException {
+        Arrays.sort(results, Comparator.comparing(Results::getDistance));
+
+        List<List<String>> data = List.of(Arrays.asList(fileName, String.valueOf(executionTime), String.valueOf(nThreads), String.valueOf(initialTemperature), String.valueOf(coolingRate), Arrays.toString(results[0].getBestPath()), String.valueOf(results[0].getDistance()), String.valueOf(results[0].getIterations()), String.valueOf(results[0].writeTime())));
+
+        CSVWriter.writeToCSV("results.csv", data);
+    }
 }

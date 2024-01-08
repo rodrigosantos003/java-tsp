@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -151,5 +152,11 @@ public class SimulatedAnnealingTSP {
         }
 
         Utilities.showResults(results);
+
+        try {
+            Utilities.exportSAResults(results, fileName, time, nThreads, initialTemperature, coolingRate);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
