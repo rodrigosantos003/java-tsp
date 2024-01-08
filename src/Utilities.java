@@ -175,8 +175,8 @@ public class Utilities {
     static void exportResults(Results[] results, String fileName, int executionTime, int nThreads, int popSize, float mutationChance) throws IOException {
         Arrays.sort(results, Comparator.comparing(Results::getDistance));
 
-        List<List<String>> data = List.of(Arrays.asList(fileName, String.valueOf(executionTime), String.valueOf(nThreads), String.valueOf(popSize), String.valueOf(mutationChance), Arrays.toString(results[0].getBestPath()), String.valueOf(results[0].getDistance()), String.valueOf(results[0].getIterations()), String.valueOf(results[0].getExecutionTime())));
+        List<List<String>> data = List.of(Arrays.asList(fileName, String.valueOf(executionTime), String.valueOf(nThreads), String.valueOf(popSize), String.valueOf(mutationChance), Arrays.toString(results[0].getBestPath()), String.valueOf(results[0].getDistance()), String.valueOf(results[0].getIterations()), String.valueOf(results[0].writeTime())));
 
-        CSVWriter.writeToCSV("dados.csv", data);
+        CSVWriter.writeToCSV("results.csv", data);
     }
 }

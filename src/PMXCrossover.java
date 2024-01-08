@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class PMXCrossover {
-    static int[][] pmxCrossover(int[] parent1, int[] parent2) {
+    static int[][] pmxCrossover(int[] parent1, int[] parent2, Random rand) {
         int[] replacement1 = new int[parent1.length + 1];
         int[] replacement2 = new int[parent1.length + 1];
         int i, n1, m1, n2, m2;
@@ -11,8 +11,6 @@ public class PMXCrossover {
         int[] offSpring2 = new int[parent1.length];
 
         int[][] offSprings = new int[2][];
-
-        Random rand = new Random();
 
         int cuttingPoint1 = rand.nextInt(parent1.length);
         int cuttingPoint2 = rand.nextInt(parent1.length);

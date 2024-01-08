@@ -1,23 +1,40 @@
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class CSVWriter {
 
     public static void writeToCSV(String filePath, List<List<String>> data) throws IOException {
-        try (
-                Writer writer = Files.newBufferedWriter(Paths.get(filePath), java.nio.file.StandardOpenOption.APPEND, java.nio.file.StandardOpenOption.CREATE);
-                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT)
-        ) {
-            for (List<String> record : data) {
-                csvPrinter.printRecord(record);
+        String lastLine = null;
+        int testNumber = 1;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lastLine = line;
             }
-            csvPrinter.flush();
+        }
+
+        if(lastLine != null){
+            String[] lastValues = lastLine.split(",");
+            String testName = data.get(0).get(0);
+            testNumber = (lastValues[1].equals(testName)) ? Integer.parseInt(lastValues[0])+1 : testNumber;
+        }
+
+        try (BufferedWriter writer = Files.newBufferedWriter(
+                Paths.get(filePath), StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(testNumber).append(",");
+            for (List<String> record : data) {
+                for (String field : record) {
+                    sb.append(field).append(",");
+                }
+                sb.deleteCharAt(sb.length() - 1); // Remove a última vírgula
+                sb.append(System.lineSeparator()); // Adiciona quebra de linha
+                writer.write(sb.toString());
+            }
         }
     }
 }

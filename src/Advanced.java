@@ -112,7 +112,7 @@ public class Advanced {
                 Arrays.sort(population, Comparator.comparing(Individual::getDistance));
 
                 //Aplicação do crossover
-                int[][] pmxResult = PMXCrossover.pmxCrossover(population[0].getPath(), population[1].getPath());
+                int[][] pmxResult = PMXCrossover.pmxCrossover(population[0].getPath(), population[1].getPath(), rand);
                 population[idx1] = new Individual(pmxResult[0], distances);
                 population[idx2] = new Individual(pmxResult[1], distances);
 

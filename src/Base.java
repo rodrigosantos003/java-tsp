@@ -28,11 +28,12 @@ public class Base {
             this.mutationChance = mutationChance;
             this.distances = distances;
             this.bestDistance = 0;
-            this.startTime = System.nanoTime();
             this.endTime = 0;
             this.iterations = 0;
             this.isRunning = true;
             this.threadIndex = threadIndex;
+
+            this.startTime = System.nanoTime();
 
             //Inicializa as populações
             for (int i = 0; i < populationSize; i++) {
@@ -84,7 +85,7 @@ public class Base {
                 Arrays.sort(population, Comparator.comparing(Individual::getDistance));
 
                 //Aplicação do crossover
-                int[][] pmxResult = PMXCrossover.pmxCrossover(population[0].getPath(), population[1].getPath());
+                int[][] pmxResult = PMXCrossover.pmxCrossover(population[0].getPath(), population[1].getPath(), rand);
                 population[idx1] = new Individual(pmxResult[0], distances);
                 population[idx2] = new Individual(pmxResult[1], distances);
 

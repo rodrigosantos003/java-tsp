@@ -50,11 +50,10 @@ public class Results {
      * Escreve o tempo de execução
      * @return Tempo de execução com respetivas unidades
      */
-    private String writeTime(){
-        String time = "\nTempo: ";
+    public String writeTime(){
         double value = getExecutionTime();
 
-        return time + (value < 1000 ? value + " ms" : String.format("%.2f", (value / 1000)) + " s");
+        return (value < 1000 ? String.format("%.3f", value) + " ms" : String.format("%.3f", (value / 1000)) + " s");
     }
 
     @Override
@@ -63,7 +62,7 @@ public class Results {
 
         out += "Melhor caminho: " + Arrays.toString(getBestPath());
         out += "\nDistância: " + getDistance();
-        out += writeTime();
+        out += "\nTempo: " + writeTime();
         out += "\nIterações: " + getIterations();
 
         return out;
