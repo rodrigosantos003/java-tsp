@@ -100,6 +100,8 @@ public class SimulatedAnnealingTSP {
 
                 //Lowers the temperature
                 temperature *= coolingRate;
+
+                if(temperature < 1) setRunning(false);
             }
 
             Utilities.updateSAValues(results, this);
