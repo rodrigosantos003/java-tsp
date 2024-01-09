@@ -80,3 +80,6 @@ for /l %%i in (1,1,10) do (
 for /l %%i in (1,1,10) do (
     java Advanced att48.txt 8 120 2304 0.001 0.5
 )
+
+echo Testes terminados!
+pause
