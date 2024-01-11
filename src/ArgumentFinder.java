@@ -2,7 +2,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLOutput;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +28,23 @@ public class ArgumentFinder {
         // Definir valores iniciais para os argumentos
         int[] initialTemperatures = {100, 1000, 1000, 10000, 100000, 500000};
         double[] coolingRates = {0.1, 0.3, 0.5, 0.9, 0.95, 0.99, 0.999, 0.9999, 0.99999};
+
         String[] files = {"att48.txt"};
+
+        boolean executeAllFiles =  true;
+
+        if(executeAllFiles){
+            File folder = new File("./tsp_tests/");
+            File[] folderItems = folder.listFiles();
+            if (folderItems != null) {
+                files = new String[folderItems.length];
+
+                for (int i = 0; i < files.length; i++) {
+                    files[i] = folderItems[i].getName();
+                }
+            }
+        }
+
         int threads = 8;
         int time = 1000;
 
@@ -148,7 +163,6 @@ public class ArgumentFinder {
         //Calcula a média do tempo de execução
         double timeExec = 0;
         for (String[] lineData : data) {
-            System.out.println(lineData[9]);
             if (lineData[9].contains("ms")) {
                 lineData[9] = lineData[9].substring(1, lineData[9].length() - 4);
                 lineData[9] = lineData[9].replace(',', '.');
