@@ -1,0 +1,270 @@
+Temperatura inicial: 1000.0
+Cooling rate: 0.99
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 1.754 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.99
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 1.9 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.99
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 2.391 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.99
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 2.769 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.99
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 2.83 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.99
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 3.137 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 5.93 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 10.482 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 10.936 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 12.341 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 15.297 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 22.125 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.9999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 24.539 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.99999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 31.111 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.9999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 40.479 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.9999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 53.306 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.9999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 62.048 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.9999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 77.906 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.99999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 88.129 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.9999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 102.826 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.99999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 142.472 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.99999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 153.058 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.99999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 180.832 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.99999
+Custo medio do melhor caminho: 413.0
+Tempo medio de execucao: 260.038 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.95
+Custo medio do melhor caminho: 415.6
+Tempo medio de execucao: 0.834 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.95
+Custo medio do melhor caminho: 417.4
+Tempo medio de execucao: 1.637 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.95
+Custo medio do melhor caminho: 417.9
+Tempo medio de execucao: 1.014 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.95
+Custo medio do melhor caminho: 420.1
+Tempo medio de execucao: 0.958 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.95
+Custo medio do melhor caminho: 425.5
+Tempo medio de execucao: 1.36 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.95
+Custo medio do melhor caminho: 426.5
+Tempo medio de execucao: 1.129 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.9
+Custo medio do melhor caminho: 436.0
+Tempo medio de execucao: 0.952 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.9
+Custo medio do melhor caminho: 438.3
+Tempo medio de execucao: 0.777 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.9
+Custo medio do melhor caminho: 439.7
+Tempo medio de execucao: 0.775 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.9
+Custo medio do melhor caminho: 440.4
+Tempo medio de execucao: 1.03 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.9
+Custo medio do melhor caminho: 441.1
+Tempo medio de execucao: 0.903 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.9
+Custo medio do melhor caminho: 454.6
+Tempo medio de execucao: 1.264 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.5
+Custo medio do melhor caminho: 504.2
+Tempo medio de execucao: 0.609 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.5
+Custo medio do melhor caminho: 508.5
+Tempo medio de execucao: 0.563 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.5
+Custo medio do melhor caminho: 512.6
+Tempo medio de execucao: 0.693 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.5
+Custo medio do melhor caminho: 513.1
+Tempo medio de execucao: 0.646 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.3
+Custo medio do melhor caminho: 513.4
+Tempo medio de execucao: 0.558 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.5
+Custo medio do melhor caminho: 516.2
+Tempo medio de execucao: 0.625 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.3
+Custo medio do melhor caminho: 516.5
+Tempo medio de execucao: 0.587 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.3
+Custo medio do melhor caminho: 526.6
+Tempo medio de execucao: 0.569 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.3
+Custo medio do melhor caminho: 532.1
+Tempo medio de execucao: 0.541 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.3
+Custo medio do melhor caminho: 533.2
+Tempo medio de execucao: 0.641 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.5
+Custo medio do melhor caminho: 538.0
+Tempo medio de execucao: 0.595 ms
+
+Temperatura inicial: 100000.0
+Cooling rate: 0.1
+Custo medio do melhor caminho: 540.9
+Tempo medio de execucao: 0.579 ms
+
+Temperatura inicial: 500000.0
+Cooling rate: 0.1
+Custo medio do melhor caminho: 544.5
+Tempo medio de execucao: 0.697 ms
+
+Temperatura inicial: 100.0
+Cooling rate: 0.1
+Custo medio do melhor caminho: 544.7
+Tempo medio de execucao: 0.525 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.3
+Custo medio do melhor caminho: 551.8
+Tempo medio de execucao: 0.567 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.1
+Custo medio do melhor caminho: 555.2
+Tempo medio de execucao: 0.548 ms
+
+Temperatura inicial: 1000.0
+Cooling rate: 0.1
+Custo medio do melhor caminho: 564.6
+Tempo medio de execucao: 0.43 ms
+
+Temperatura inicial: 10000.0
+Cooling rate: 0.1
+Custo medio do melhor caminho: 568.7
+Tempo medio de execucao: 0.496 ms
+
