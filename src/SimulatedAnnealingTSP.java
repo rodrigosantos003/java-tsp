@@ -81,7 +81,7 @@ public class SimulatedAnnealingTSP {
             int[] currentSolution = Utilities.generateRandomPath(distances.length, rand);
             int currentDistance = Utilities.calculateDistance(currentSolution, distances);
 
-            while (isRunning) {
+            while (isRunning && temperature > 1) {
                 iterations++;
 
                 int[] newSolution = Utilities.elementRandomSwitch(currentSolution, rand);
@@ -100,8 +100,6 @@ public class SimulatedAnnealingTSP {
 
                 //Lowers the temperature
                 temperature *= coolingRate;
-
-                if(temperature < 1) setRunning(false);
             }
 
             Utilities.updateSAValues(results, this);
