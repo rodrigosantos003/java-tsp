@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,19 +15,17 @@ public class ProblemGenerator {
 
             Random random = new Random(seed);
 
-            int n = seed;
+            int[] xCoordinates = generateCoordinates(seed, random);
+            int[] yCoordinates = generateCoordinates(seed, random);
 
-            int[] xCoordinates = generateCoordinates(n, random);
-            int[] yCoordinates = generateCoordinates(n, random);
-
-            int[][] distancesMatrix = calculateDistancesMatrix(n, xCoordinates, yCoordinates);
+            int[][] distancesMatrix = calculateDistancesMatrix(seed, xCoordinates, yCoordinates);
 
             // Nome do arquivo
-            String fileName = "./ex_gau" + n + ".txt";
+            String fileName = "./tsp_tests/ex_gau" + seed + ".txt";
 
-            saveDistancesMatrix(fileName, n, distancesMatrix);
+            saveDistancesMatrix(fileName, seed, distancesMatrix);
 
-            System.out.println("Novo problema gerado: " + n + " cidades");
+            System.out.println("Novo problema gerado: " + seed + " cidades");
         } catch (NumberFormatException e) {
             System.out.println("ERRO: A semente (número de cidades) deve ser um inteiro válido.");
         } catch (IOException e) {
