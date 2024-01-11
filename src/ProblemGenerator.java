@@ -2,65 +2,49 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ProblemGenerator {
     public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Por favor, forneça a semente (que também será o número de cidades) como argumento.");
+            return;
+        }
+
         try {
-            int n = generateNumberOfCities(new int[]{22, 24, 26, 42, 48});
+            int seed = Integer.parseInt(args[0]);
 
-            if(testExists(n)){
-                System.out.println("O teste " + n + " já existe");
-                return;
-            }
+            Random random = new Random(seed);
 
-            int[] xCoordinates = generateCoordinates(n);
-            int[] yCoordinates = generateCoordinates(n);
+            int n = seed;
+
+            int[] xCoordinates = generateCoordinates(n, random);
+            int[] yCoordinates = generateCoordinates(n, random);
 
             int[][] distancesMatrix = calculateDistancesMatrix(n, xCoordinates, yCoordinates);
 
-            //Nome do ficheiro
-            String fileName = "./tsp_tests/custom_" + n + ".txt";
+            // Nome do arquivo
+            String fileName = "./ex_gau" + n + ".txt";
 
             saveDistancesMatrix(fileName, n, distancesMatrix);
 
             System.out.println("Novo problema gerado: " + n + " cidades");
+        } catch (NumberFormatException e) {
+            System.out.println("ERRO: A semente (número de cidades) deve ser um inteiro válido.");
         } catch (IOException e) {
             System.out.println("ERRO: " + e.getMessage());
         }
     }
 
     /**
-     * Gera o número de cidades
-     *
-     * @param exclusions Cidades excluídas
-     * @return Número de cidades
-     */
-    private static int generateNumberOfCities(int[] exclusions) {
-        Random random = new Random();
-        int n;
-
-        Integer[] exclusionsInteger = Arrays.stream(exclusions).boxed().toArray(Integer[]::new);
-
-        do {
-            n = random.nextInt(60 - 18 + 1) + 18;
-        } while (Arrays.asList(exclusionsInteger).contains(n));
-
-        return n;
-    }
-
-    /**
      * Gera coordenadas x e y usando distribuição normal
      *
-     * @param n Tamaho das coordenadas
+     * @param n      Tamanho das coordenadas
+     * @param random Objeto Random com semente definida
      * @return Valor das coordenadas
      */
-    private static int[] generateCoordinates(int n) {
+    private static int[] generateCoordinates(int n, Random random) {
         int[] coordinates = new int[n];
-        Random random = new Random();
 
         for (int i = 0; i < n; i++) {
             coordinates[i] = (int) (60 + random.nextGaussian() * 30);
@@ -107,26 +91,6 @@ public class ProblemGenerator {
             writer.println();
         }
         writer.println();
-    }
-
-    private static boolean testExists(int test) {
-        File folder = new File("./tsp_tests/");
-        File[] listOfFiles = folder.listFiles();
-
-        if (listOfFiles != null) {
-            for (File file : listOfFiles) {
-                if (file.isFile() && file.getName().matches(".*\\d+.*")) {
-                    Pattern pattern = Pattern.compile("\\d+");
-                    Matcher matcher = pattern.matcher(file.getName());
-                    while (matcher.find()) {
-                        int extractedNumber = Integer.parseInt(matcher.group());
-                        if (extractedNumber == test) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+        writer.close(); // Fechar o PrintWriter após o uso
     }
 }
