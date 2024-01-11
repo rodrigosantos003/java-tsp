@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,17 +16,27 @@ public class ProblemGenerator {
 
             Random random = new Random(seed);
 
-            int[] xCoordinates = generateCoordinates(seed, random);
-            int[] yCoordinates = generateCoordinates(seed, random);
+            int n = seed;
 
-            int[][] distancesMatrix = calculateDistancesMatrix(seed, xCoordinates, yCoordinates);
+            int[] coordinates = generateCoordinates(n, random);
+
+            int[] xCoordinates = new int[n];
+            int[] yCoordinates = new int[n];
+
+            for (int i = 0, j=0; i < n * 2; i+=2, j++) {
+                xCoordinates[j] = coordinates[i];
+                yCoordinates[j] = coordinates[i+1];
+
+            }
+
+            int[][] distancesMatrix = calculateDistancesMatrix(n, xCoordinates, yCoordinates);
 
             // Nome do arquivo
-            String fileName = "./tsp_tests/ex_gau" + seed + ".txt";
+            String fileName = "./ex_gau" + n + ".txt";
 
-            saveDistancesMatrix(fileName, seed, distancesMatrix);
+            saveDistancesMatrix(fileName, n, distancesMatrix);
 
-            System.out.println("Novo problema gerado: " + seed + " cidades");
+            System.out.println("Novo problema gerado: " + n + " cidades");
         } catch (NumberFormatException e) {
             System.out.println("ERRO: A semente (número de cidades) deve ser um inteiro válido.");
         } catch (IOException e) {
@@ -41,10 +52,10 @@ public class ProblemGenerator {
      * @return Valor das coordenadas
      */
     private static int[] generateCoordinates(int n, Random random) {
-        int[] coordinates = new int[n];
+        int[] coordinates = new int[n * 2];
 
-        for (int i = 0; i < n; i++) {
-            coordinates[i] = (int) (60 + random.nextGaussian() * 30);
+        for (int i = 0; i < n * 2; i++) {
+            coordinates[i] = (int) (random.nextGaussian(60,30)) ;
         }
 
         return coordinates;
