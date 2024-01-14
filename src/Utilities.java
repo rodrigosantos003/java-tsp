@@ -37,7 +37,6 @@ public class Utilities {
         return matrix;
     }
 
-
     /**
      * Calcula a distância de um dado caminho
      *
@@ -57,7 +56,6 @@ public class Utilities {
         return totalDistance;
     }
 
-
     /**
      * Gera um caminho aleatório
      *
@@ -75,7 +73,6 @@ public class Utilities {
 
         return path;
     }
-
 
     /**
      * Baralha o array, garantindo que cada índice ocorre exatante uma vez
@@ -114,52 +111,20 @@ public class Utilities {
     }
 
     /**
-     * Atualiza os valores da memória central (algoritmo base)
+     * Atualiza os valores dos resultados
      *
      * @param results Array de resultados
      * @param thread  Thread a atualizar
      */
-    static void updateBaseValues(Results[] results, Base.TSPThread thread) {
+    static void updateValues(Results[] results, TSPThread thread) {
         int index = thread.getThreadIndex();
-        int[] path = thread.getPopulation()[0].getPath();
+        int[] path = thread.getBestPath();
 
         results[index].setBestPath(path);
         results[index].setDistance(thread.getBestDistance());
         results[index].setExecutionTime(thread.getEndTime() - thread.getStartTime());
         results[index].setIterations(thread.getIterations());
     }
-
-    /**
-     * Atualiza os valores da memória central (algorimo avançado)
-     *
-     * @param results Array de resultados
-     * @param thread  Thread a atualizar
-     */
-    static void updateAdvancedValues(Results[] results, Advanced.TSPThread thread) {
-        int index = thread.getThreadIndex();
-        int[] path = thread.getPopulation()[0].getPath();
-
-        results[index].setBestPath(path);
-        results[index].setDistance(thread.getBestDistance());
-        results[index].setExecutionTime(thread.getEndTime() - thread.getStartTime());
-        results[index].setIterations(thread.getIterations());
-    }
-
-    /**
-     * Atualiza os valores da memória central (algorimo Simulated Annealing)
-     *
-     * @param results Array de resultados
-     * @param thread  Thread a atualizar
-     */
-    static void updateSAValues(Results[] results, SimulatedAnnealingTSP.TSPThread thread) {
-        int index = thread.getThreadIndex();
-
-        results[index].setBestPath(thread.getBestPath());
-        results[index].setDistance(thread.getBestDistance());
-        results[index].setExecutionTime(thread.getEndTime() - thread.getStartTime());
-        results[index].setIterations(thread.getIterations());
-    }
-
 
     /**
      * Apresenta os resultados
@@ -172,18 +137,20 @@ public class Utilities {
         System.out.println(results[0].toString());
     }
 
-    static void exportResults(Results[] results, String fileName, int executionTime, int nThreads, int popSize, float mutationChance) throws IOException {
+    /**
+     * Exporta os resultados para um ficheiro CSV
+     *
+     * @param results Array de resultados
+     * @param args    Argumentos do programa
+     * @throws IOException Erro ao escrever no ficheiro
+     */
+    static void exportResults(Results[] results, String[] args) throws IOException {
         Arrays.sort(results, Comparator.comparing(Results::getDistance));
 
-        List<List<String>> data = List.of(Arrays.asList(fileName, String.valueOf(executionTime), String.valueOf(nThreads), String.valueOf(popSize), String.valueOf(mutationChance), Arrays.toString(results[0].getBestPath()), String.valueOf(results[0].getDistance()), String.valueOf(results[0].getIterations()), String.valueOf(results[0].writeTime())));
-
-        CSVWriter.writeToCSV("results.csv", data);
-    }
-
-    static void exportSAResults(Results[] results, String fileName, int executionTime, int nThreads, double initialTemperature, double coolingRate) throws IOException {
-        Arrays.sort(results, Comparator.comparing(Results::getDistance));
-
-        List<List<String>> data = List.of(Arrays.asList(fileName, String.valueOf(executionTime), String.valueOf(nThreads), String.valueOf(initialTemperature), String.valueOf(coolingRate), Arrays.toString(results[0].getBestPath()), String.valueOf(results[0].getDistance()), String.valueOf(results[0].getIterations()), String.valueOf(results[0].writeTime())));
+        List<List<String>> data = List.of(Arrays.asList(
+                args[0], args[2], args[1], args[3],
+                args[4], Arrays.toString(results[0].getBestPath()), String.valueOf(results[0].getDistance()),
+                String.valueOf(results[0].getIterations()), String.valueOf(results[0].writeTime())));
 
         CSVWriter.writeToCSV("results.csv", data);
     }

@@ -6,23 +6,23 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Base {
-    static Results[] results; //Resultados
+    static Results[] results; // Resultados
     static Random rand = new Random();
 
-    static class TSPThread extends Thread {
-        private final Individual[] population; //População
-        private final int populationSize; //Tamanho da população
-        private final float mutationChance; //Probabilidade de mutação
-        private final int[][] distances; //Matriz de distâncias
-        private int bestDistance; //Melhor distância
-        private final long startTime; //Tempo inicial
-        private long endTime; //Tempo final
-        private int iterations; //Iterações
+    static class BaseThread extends Thread implements TSPThread {
+        private final Individual[] population; // População
+        private final int populationSize; // Tamanho da população
+        private final float mutationChance; // Probabilidade de mutação
+        private final int[][] distances; // Matriz de distâncias
+        private int bestDistance; // Melhor distância
+        private final long startTime; // Tempo inicial
+        private long endTime; // Tempo final
+        private int iterations; // Iterações
 
-        private boolean isRunning; //Condição de execução
-        private final int threadIndex; //Índice de criação da thread
+        private boolean isRunning; // Condição de execução
+        private final int threadIndex; // Índice de criação da thread
 
-        public TSPThread(int populationSize, float mutationChance, int[][] distances, int threadIndex) {
+        public BaseThread(int populationSize, float mutationChance, int[][] distances, int threadIndex) {
             this.populationSize = populationSize;
             this.population = new Individual[this.populationSize];
             this.mutationChance = mutationChance;
@@ -35,18 +35,18 @@ public class Base {
 
             this.startTime = System.nanoTime();
 
-            //Inicializa as populações
+            // Inicializa as populações
             for (int i = 0; i < populationSize; i++) {
                 population[i] = new Individual(Utilities.generateRandomPath(distances.length, rand), distances);
             }
         }
 
-        public Individual[] getPopulation() {
-            return population;
-        }
-
         public int getBestDistance() {
             return bestDistance;
+        }
+
+        public int[] getBestPath() {
+            return population[0].getPath();
         }
 
         public long getStartTime() {
@@ -81,15 +81,15 @@ public class Base {
             while (isRunning) {
                 localIterations++;
 
-                //Ordena a população
+                // Ordena a população
                 Arrays.sort(population, Comparator.comparing(Individual::getDistance));
 
-                //Aplicação do crossover
+                // Aplicação do crossover
                 int[][] pmxResult = PMXCrossover.pmxCrossover(population[0].getPath(), population[1].getPath(), rand);
                 population[idx1] = new Individual(pmxResult[0], distances);
                 population[idx2] = new Individual(pmxResult[1], distances);
 
-                //Mutação dos elementos
+                // Mutação dos elementos
                 float mutationValue = rand.nextFloat(1);
 
                 if (mutationValue < mutationChance) {
@@ -106,10 +106,9 @@ public class Base {
                 }
             }
 
-            Utilities.updateBaseValues(results, this);
+            Utilities.updateValues(results, this);
         }
     }
-
 
     public static void main(String[] args) {
         if (args.length != 5) {
@@ -119,35 +118,35 @@ public class Base {
             System.exit(-1);
         }
 
-        //Obtém os argumentos
+        // Obtém os argumentos
         String fileName = args[0];
         int nThreads = Integer.parseInt(args[1]);
         int time = Integer.parseInt(args[2]);
         int populationSize = Integer.parseInt(args[3]);
         float mutationChance = Float.parseFloat(args[4]);
 
-        //Inicializa a matriz
+        // Inicializa a matriz
         int[][] distances = Utilities.generateMatrix(fileName);
 
-        TSPThread[] threads = new TSPThread[nThreads];
+        BaseThread[] threads = new BaseThread[nThreads];
 
         results = new Results[nThreads];
 
-        //Início da execução das threads
+        // Início da execução das threads
         for (int i = 0; i < nThreads; i++) {
-            threads[i] = new TSPThread(populationSize, mutationChance, distances, i);
+            threads[i] = new BaseThread(populationSize, mutationChance, distances, i);
             results[i] = new Results(distances.length);
             threads[i].start();
         }
 
-        //Após o tempo definido, terminar as threads
+        // Após o tempo definido, terminar as threads
         CompletableFuture.delayedExecutor(time, TimeUnit.SECONDS).execute(() -> {
-            for (TSPThread thread : threads) {
+            for (BaseThread thread : threads) {
                 thread.setRunning(false);
             }
         });
 
-        //Espera que as threads terminem
+        // Espera que as threads terminem
         for (int i = 0; i < nThreads; i++) {
             try {
                 threads[i].join();
@@ -159,7 +158,7 @@ public class Base {
         Utilities.showResults(results);
 
         try {
-            Utilities.exportResults(results, fileName, time, nThreads, populationSize, mutationChance);
+            Utilities.exportResults(results, args);
         } catch (IOException e) {
             System.out.println("ERRO: " + e.getMessage());
         }

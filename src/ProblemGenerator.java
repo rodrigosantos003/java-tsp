@@ -62,7 +62,7 @@ public class ProblemGenerator {
 
     /**
      * Calcula a matriz de distâncias
-     * 
+     *
      * @param n            Tamanho da matriz
      * @param xCoordinates Coordenadas x
      * @param yCoordinates Coordenadas y
@@ -83,7 +83,7 @@ public class ProblemGenerator {
 
     /**
      * Calcula a distância entre dois pontos
-     * 
+     *
      * @param x1 Coordenada x do ponto 1
      * @param y1 Coordenada y do ponto 1
      * @param x2 Coordenada x do ponto 2
@@ -117,10 +117,10 @@ public class ProblemGenerator {
 
     /**
      * Verifica se já existe um teste com o número de cidades indicado
-     * 
+     *
      * @param test Número de cidades
      * @return True se já existir um teste com o número de cidades indicado, false
-     *         caso contrário
+     * caso contrário
      */
     private static boolean testExists(int test) {
         File folder = new File("./tsp_tests/");

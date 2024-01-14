@@ -5,12 +5,10 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class CSVWriter {
-
     public static void writeToCSV(String filePath, List<List<String>> data) throws IOException {
         int testNumber = getTestNumber(filePath, data);
 
-        try (BufferedWriter writer = Files.newBufferedWriter(
-                Paths.get(filePath), StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
 
             StringBuilder sb = new StringBuilder();
             sb.append(testNumber).append(",");
@@ -51,10 +49,10 @@ public class CSVWriter {
             }
         }
 
-        if(lastLine != null){
+        if (lastLine != null) {
             String[] lastValues = lastLine.split(",");
             String testName = data.get(0).get(0);
-            testNumber = (lastValues[1].equals(testName)) ? Integer.parseInt(lastValues[0])+1 : testNumber;
+            testNumber = (lastValues[1].equals(testName)) ? Integer.parseInt(lastValues[0]) + 1 : testNumber;
         }
         return testNumber;
     }

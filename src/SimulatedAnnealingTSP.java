@@ -8,7 +8,7 @@ public class SimulatedAnnealingTSP {
     static Results[] results;
     static Random rand = new Random();
 
-    static class TSPThread extends Thread {
+    static class SAThread extends Thread implements TSPThread {
         private double temperature;
         private final double coolingRate;
         private final int[][] distances;
@@ -20,7 +20,7 @@ public class SimulatedAnnealingTSP {
         private boolean isRunning;
         private final int threadIndex;
 
-        public TSPThread(double temperature, double coolingRate, int[][] distances, int threadIndex) {
+        public SAThread(double temperature, double coolingRate, int[][] distances, int threadIndex) {
             this.temperature = temperature;
             this.coolingRate = coolingRate;
             this.distances = distances;
@@ -62,9 +62,10 @@ public class SimulatedAnnealingTSP {
 
         /**
          * Determina se a nova solução é aceitável
+         *
          * @param currentDistance Distância atual
-         * @param newDistance Nova distância
-         * @param temperature Temperatura atual
+         * @param newDistance     Nova distância
+         * @param temperature     Temperatura atual
          * @return TRUE em caso afirmativo, FALSE caso contrário
          */
         private static boolean acceptNewSolution(double currentDistance, double newDistance, double temperature) {
@@ -98,11 +99,11 @@ public class SimulatedAnnealingTSP {
                     endTime = System.nanoTime();
                 }
 
-                //Lowers the temperature
+                // Lowers the temperature
                 temperature *= coolingRate;
             }
 
-            Utilities.updateSAValues(results, this);
+            Utilities.updateValues(results, this);
         }
     }
 
@@ -114,35 +115,35 @@ public class SimulatedAnnealingTSP {
             System.exit(-1);
         }
 
-        //Obtém os argumentos
+        // Obtém os argumentos
         String fileName = args[0];
         int nThreads = Integer.parseInt(args[1]);
         int time = Integer.parseInt(args[2]);
         double initialTemperature = Double.parseDouble(args[3]);
         double coolingRate = Double.parseDouble(args[4]);
 
-        //Inicializa a matriz
+        // Inicializa a matriz
         int[][] distances = Utilities.generateMatrix(fileName);
 
-        TSPThread[] threads = new TSPThread[nThreads];
+        SAThread[] threads = new SAThread[nThreads];
 
         results = new Results[nThreads];
 
-        //Início da execução das threads
+        // Início da execução das threads
         for (int i = 0; i < nThreads; i++) {
-            threads[i] = new TSPThread(initialTemperature, coolingRate, distances, i);
+            threads[i] = new SAThread(initialTemperature, coolingRate, distances, i);
             results[i] = new Results(distances.length);
             threads[i].start();
         }
 
-        //Após o tempo definido, terminar as threads
+        // Após o tempo definido, terminar as threads
         CompletableFuture.delayedExecutor(time, TimeUnit.SECONDS).execute(() -> {
-            for (TSPThread thread : threads) {
+            for (SAThread thread : threads) {
                 thread.setRunning(false);
             }
         });
 
-        //Espera que as threads terminem
+        // Espera que as threads terminem
         for (int i = 0; i < nThreads; i++) {
             try {
                 threads[i].join();
@@ -154,7 +155,7 @@ public class SimulatedAnnealingTSP {
         Utilities.showResults(results);
 
         try {
-            Utilities.exportSAResults(results, fileName, time, nThreads, initialTemperature, coolingRate);
+            Utilities.exportResults(results, args);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

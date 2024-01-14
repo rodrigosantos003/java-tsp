@@ -48,9 +48,10 @@ public class Results {
 
     /**
      * Escreve o tempo de execução
+     *
      * @return Tempo de execução com respetivas unidades
      */
-    public String writeTime(){
+    public String writeTime() {
         double value = getExecutionTime();
 
         return (value < 1000 ? String.format("%.3f", value) + " ms" : String.format("%.3f", (value / 1000)) + " s");
