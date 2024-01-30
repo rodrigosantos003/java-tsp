@@ -8,7 +8,8 @@ public class CSVWriter {
     public static void writeToCSV(String filePath, List<List<String>> data) throws IOException {
         int testNumber = getTestNumber(filePath, data);
 
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.APPEND, StandardOpenOption.CREATE)) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath), StandardOpenOption.APPEND,
+                StandardOpenOption.CREATE)) {
 
             StringBuilder sb = new StringBuilder();
             sb.append(testNumber).append(",");
@@ -26,7 +27,7 @@ public class CSVWriter {
                         sb.append(",");
                     }
                 }
-                sb.append(System.lineSeparator()); // Adiciona quebra de linha
+                sb.append(System.lineSeparator());
                 writer.write(sb.toString());
             }
         }

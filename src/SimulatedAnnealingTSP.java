@@ -61,12 +61,13 @@ public class SimulatedAnnealingTSP {
         }
 
         /**
-         * Determina se a nova solução é aceitável
+         * Evaluate if the new solution is better than the current one
          *
-         * @param currentDistance Distância atual
-         * @param newDistance     Nova distância
-         * @param temperature     Temperatura atual
-         * @return TRUE em caso afirmativo, FALSE caso contrário
+         * @param currentDistance Current distance
+         * @param newDistance     New distance
+         * @param temperature     Current temperature
+         * @return True if the new solution is better than the current one, false
+         *         otherwise
          */
         private static boolean acceptNewSolution(double currentDistance, double newDistance, double temperature) {
             if (newDistance < currentDistance) {
@@ -110,40 +111,41 @@ public class SimulatedAnnealingTSP {
     public static void main(String[] args) {
         if (args.length != 5) {
             System.out.println("ERRO: Número de argumentos inválido!");
-            System.out.println("Formato correto dos argumentos: <file_name> <threads> <time> <initial_temperature> <cooling_rate>");
+            System.out.println(
+                    "Formato correto dos argumentos: <file_name> <threads> <time> <initial_temperature> <cooling_rate>");
 
             System.exit(-1);
         }
 
-        // Obtém os argumentos
+        // Get the arguments
         String fileName = args[0];
         int nThreads = Integer.parseInt(args[1]);
         int time = Integer.parseInt(args[2]);
         double initialTemperature = Double.parseDouble(args[3]);
         double coolingRate = Double.parseDouble(args[4]);
 
-        // Inicializa a matriz
+        // Initialize the distances matrix
         int[][] distances = Utilities.generateMatrix(fileName);
 
         SAThread[] threads = new SAThread[nThreads];
 
         results = new Results[nThreads];
 
-        // Início da execução das threads
+        // Start the threads
         for (int i = 0; i < nThreads; i++) {
             threads[i] = new SAThread(initialTemperature, coolingRate, distances, i);
             results[i] = new Results(distances.length);
             threads[i].start();
         }
 
-        // Após o tempo definido, terminar as threads
+        // After the time has passed, stop the threads
         CompletableFuture.delayedExecutor(time, TimeUnit.SECONDS).execute(() -> {
             for (SAThread thread : threads) {
                 thread.setRunning(false);
             }
         });
 
-        // Espera que as threads terminem
+        // Wait for all threads to finish
         for (int i = 0; i < nThreads; i++) {
             try {
                 threads[i].join();

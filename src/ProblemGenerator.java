@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class ProblemGenerator {
     public static void main(String[] args) {
         try {
-            // Gera problemas de 18 a 60 cidades
+            // Generate problems with 18 to 60 cities
             for (int seed = 18; seed <= 60; seed++) {
                 if (testExists(seed)) {
                     continue;
@@ -29,7 +29,7 @@ public class ProblemGenerator {
 
                 int[][] distancesMatrix = calculateDistancesMatrix(seed, xCoordinates, yCoordinates);
 
-                // Nome do ficheiro
+                // Name of the file
                 String fileName = "./tsp_tests/ex_gau" + seed + ".txt";
 
                 saveDistancesMatrix(fileName, seed, distancesMatrix);
@@ -44,11 +44,11 @@ public class ProblemGenerator {
     }
 
     /**
-     * Gera coordenadas x e y usando distribuição normal
+     * Generate x and y coordinates using a Gaussian distribution
      *
-     * @param n      Tamanho das coordenadas
-     * @param random Objeto Random com semente definida
-     * @return Valor das coordenadas
+     * @param n      Size of the coordinates array
+     * @param random Random object
+     * @return Coordinates array
      */
     private static int[] generateCoordinates(int n, Random random) {
         int[] coordinates = new int[n * 2];
@@ -61,12 +61,12 @@ public class ProblemGenerator {
     }
 
     /**
-     * Calcula a matriz de distâncias
+     * Calculates the distances matrix
      *
-     * @param n            Tamanho da matriz
-     * @param xCoordinates Coordenadas x
-     * @param yCoordinates Coordenadas y
-     * @return Matriz de distâncias
+     * @param n            Size of the matrix
+     * @param xCoordinates X coordinates
+     * @param yCoordinates Y coordinates
+     * @return Distances matrix
      */
     private static int[][] calculateDistancesMatrix(int n, int[] xCoordinates, int[] yCoordinates) {
         int[][] distancesMatrix = new int[n][n];
@@ -82,24 +82,24 @@ public class ProblemGenerator {
     }
 
     /**
-     * Calcula a distância entre dois pontos
+     * Calculates the distance between two points
      *
-     * @param x1 Coordenada x do ponto 1
-     * @param y1 Coordenada y do ponto 1
-     * @param x2 Coordenada x do ponto 2
-     * @param y2 Coordenada y do ponto 2
-     * @return Distância entre os dois pontos
+     * @param x1 X coordinate of point 1
+     * @param y1 Y coordinate of point 1
+     * @param x2 X coordinate of point 2
+     * @param y2 Y coordinate of point 2
+     * @return Distance between the two points
      */
     private static int calculateDistance(int x1, int y1, int x2, int y2) {
         return (int) Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
     /**
-     * Guarda a matriz num ficheiro de texto
+     * Saves the distances matrix to a text file
      *
-     * @param file            Ficheiro da matriz
-     * @param n               Tamanho da matriz
-     * @param distancesMatrix Matriz de distâncias
+     * @param file            File name
+     * @param n               Size of the matrix
+     * @param distancesMatrix Distances matrix
      */
     private static void saveDistancesMatrix(String file, int n, int[][] distancesMatrix) throws IOException {
         PrintWriter writer = new PrintWriter(new FileWriter(file, true));
@@ -116,11 +116,10 @@ public class ProblemGenerator {
     }
 
     /**
-     * Verifica se já existe um teste com o número de cidades indicado
+     * Verifies if a test with the given number of cities already exists
      *
-     * @param test Número de cidades
-     * @return True se já existir um teste com o número de cidades indicado, false
-     * caso contrário
+     * @param test Number of cities
+     * @return True if the test exists, false otherwise
      */
     private static boolean testExists(int test) {
         File folder = new File("./tsp_tests/");

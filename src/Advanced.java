@@ -6,21 +6,21 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 public class Advanced {
-    static Results[] results; // Resultados
+    static Results[] results;
     static Random rand = new Random();
 
     static class AdvancedThread extends Thread implements TSPThread {
-        private Individual[] population; // População
-        private final int populationSize; // Tamanho da população
-        private final float mutationChance; // Probabilidade de mutação
-        private final int[][] distances; // Matriz de distâncias
-        private int bestDistance; // Melhor distância
-        private final long startTime; // Tempo inicial
-        private long endTime; // Tempo final
-        private int iterations; // Iterações
+        private Individual[] population;
+        private final int populationSize;
+        private final float mutationChance;
+        private final int[][] distances;
+        private int bestDistance;
+        private final long startTime;
+        private long endTime;
+        private int iterations;
 
-        private boolean isRunning; // Condição de execução
-        private final int threadIndex; // Índice de criação da thread
+        private boolean isRunning;
+        private final int threadIndex;
         private volatile boolean paused = false;
         private final Object pauseLock = new Object();
 
@@ -37,7 +37,7 @@ public class Advanced {
 
             this.startTime = System.nanoTime();
 
-            // Inicializa as populações
+            // Initialize the population
             for (int i = 0; i < populationSize; i++) {
                 population[i] = new Individual(Utilities.generateRandomPath(distances.length, rand), distances);
             }
@@ -112,20 +112,22 @@ public class Advanced {
 
                 localIterations++;
 
-                // Ordena a população
+                // Sort the population
                 Arrays.sort(population, Comparator.comparing(Individual::getDistance));
 
-                // Aplicação do crossover
+                // Apply PMX crossover
                 int[][] pmxResult = PMXCrossover.pmxCrossover(population[0].getPath(), population[1].getPath(), rand);
                 population[idx1] = new Individual(pmxResult[0], distances);
                 population[idx2] = new Individual(pmxResult[1], distances);
 
-                // Mutação dos elementos
+                // Element mutation
                 float mutationValue = rand.nextFloat(1);
 
                 if (mutationValue < mutationChance) {
-                    population[idx1] = new Individual(Utilities.elementRandomSwitch(population[idx1].getPath(), rand), distances);
-                    population[idx2] = new Individual(Utilities.elementRandomSwitch(population[idx2].getPath(), rand), distances);
+                    population[idx1] = new Individual(Utilities.elementRandomSwitch(population[idx1].getPath(), rand),
+                            distances);
+                    population[idx2] = new Individual(Utilities.elementRandomSwitch(population[idx2].getPath(), rand),
+                            distances);
                 }
 
                 int currentBestDistance = Utilities.calculateDistance(population[0].getPath(), distances);
@@ -142,21 +144,22 @@ public class Advanced {
     }
 
     /**
-     * Junta todas as populações das threads
+     * Merge populations from all threads
      *
-     * @param mergeAmount Vezes da execução
-     * @param mergeTime   Tempo da junção
-     * @param threads     Array de threads
-     * @param popSize     Tamanho da população
+     * @param mergeAmount Merge amount
+     * @param mergeTime   Merge time
+     * @param threads     Array of threads
+     * @param popSize     Population size
      */
     static void executeMerge(int mergeAmount, float mergeTime, AdvancedThread[] threads, int popSize) {
-        if (mergeAmount == 0) return;
+        if (mergeAmount == 0)
+            return;
 
         CompletableFuture.delayedExecutor((long) mergeTime, TimeUnit.SECONDS).execute(() -> {
             Individual[] populations = new Individual[threads.length * popSize];
             int index = 0;
 
-            // Pausa todas as threads e junta as populações
+            // Pause all threads and copy their populations
             for (AdvancedThread thread : threads) {
                 thread.pauseThread();
                 System.arraycopy(thread.getPopulation(), 0, populations, index, popSize);
@@ -165,16 +168,17 @@ public class Advanced {
 
             Arrays.sort(populations, Comparator.comparing(Individual::getDistance));
 
-            // Copia as populações ordenadas para as threads
+            // Copy the best individuals to the new population
             Individual[] newPopulations = Arrays.copyOfRange(populations, 0, popSize * threads.length);
 
-            // Atualiza as populações das threads e resume a execução
+            // Update the population of each thread and resume them
             for (AdvancedThread thread : threads) {
                 thread.setPopulation(Arrays.copyOf(newPopulations, popSize));
                 thread.resumeThread();
             }
 
-            if (mergeAmount > 0) executeMerge(mergeAmount - 1, mergeTime, threads, popSize);
+            if (mergeAmount > 0)
+                executeMerge(mergeAmount - 1, mergeTime, threads, popSize);
         });
     }
 
@@ -187,7 +191,7 @@ public class Advanced {
             System.exit(-1);
         }
 
-        // Obtém os argumentos
+        // Get the arguments
         String fileName = args[0];
         int nThreads = Integer.parseInt(args[1]);
         int time = Integer.parseInt(args[2]);
@@ -198,14 +202,14 @@ public class Advanced {
         float mergeAmount = 1 / timePercentage;
         float mergeTime = time * timePercentage;
 
-        // Inicializa a matriz
+        // Initialize the distances matrix
         int[][] distances = Utilities.generateMatrix(fileName);
 
         AdvancedThread[] threads = new AdvancedThread[nThreads];
 
         results = new Results[nThreads];
 
-        // Início da execução das threads
+        // Start the threads
         for (int i = 0; i < nThreads; i++) {
             threads[i] = new AdvancedThread(populationSize, mutationChance, distances, i);
             results[i] = new Results(distances.length);
@@ -214,14 +218,14 @@ public class Advanced {
 
         executeMerge((int) Math.floor(mergeAmount) - 1, mergeTime, threads, populationSize);
 
-        // Após o tempo definido, terminar as threads
+        // After the time has passed, stop the threads
         CompletableFuture.delayedExecutor(time, TimeUnit.SECONDS).execute(() -> {
             for (AdvancedThread thread : threads) {
                 thread.setRunning(false);
             }
         });
 
-        // Espera que as threads terminem
+        // Wait for all threads to finish
         for (int i = 0; i < nThreads; i++) {
             try {
                 threads[i].join();

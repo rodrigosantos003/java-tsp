@@ -13,7 +13,8 @@ class TestResult {
     int threads;
     String fileName;
 
-    public TestResult(double initialTemperature, double coolingRate, double distance, double timeExec, int threads, String fileName) {
+    public TestResult(double initialTemperature, double coolingRate, double distance, double timeExec, int threads,
+            String fileName) {
         this.initialTemperature = initialTemperature;
         this.coolingRate = coolingRate;
         this.distance = distance;
@@ -25,15 +26,15 @@ class TestResult {
 
 public class ArgumentFinder {
     public static void main(String[] args) throws IOException, InterruptedException {
-        // Definir valores iniciais para os argumentos
-        int[] initialTemperatures = {100, 1000, 1000, 10000, 100000, 500000};
-        double[] coolingRates = {0.1, 0.3, 0.5, 0.9, 0.95, 0.99, 0.999, 0.9999, 0.99999};
+        // Define values for the initial temperature and cooling rate
+        int[] initialTemperatures = { 100, 1000, 1000, 10000, 100000, 500000 };
+        double[] coolingRates = { 0.1, 0.3, 0.5, 0.9, 0.95, 0.99, 0.999, 0.9999, 0.99999 };
 
-        String[] files = {"att48.txt"};
+        String[] files = { "ex_gau37.txt" };
 
-        boolean executeAllFiles =  true;
+        boolean executeAllFiles = false;
 
-        if(executeAllFiles){
+        if (executeAllFiles) {
             File folder = new File("./tsp_tests/");
             File[] folderItems = folder.listFiles();
             if (folderItems != null) {
@@ -60,7 +61,9 @@ public class ArgumentFinder {
             for (int initialTemperature : initialTemperatures) {
                 for (double coolingRate : coolingRates) {
                     for (int i = 0; i < testAmount; i++) {
-                        ProcessBuilder pb = new ProcessBuilder("java", "-cp", "out/production/java-tsp", "SimulatedAnnealingTSP", fileName, String.valueOf(threads), String.valueOf(time), String.valueOf(initialTemperature), String.valueOf(coolingRate));
+                        ProcessBuilder pb = new ProcessBuilder("java", "-cp", "out/production/java-tsp",
+                                "SimulatedAnnealingTSP", fileName, String.valueOf(threads), String.valueOf(time),
+                                String.valueOf(initialTemperature), String.valueOf(coolingRate));
                         Process p = pb.start();
                         p.waitFor();
                     }
@@ -69,13 +72,16 @@ public class ArgumentFinder {
 
                     results.add(result);
 
-                    String executionTime = (result.timeExec < 1000 ? String.format("%.3f", result.timeExec) + " ms" : String.format("%.3f", (result.timeExec / 1000)) + " s");
-                    System.out.println("Test " + currentTest + " / " + totalTests + " (" + fileName + ", " + initialTemperature + ", " + coolingRate + ") - " + result.distance + " | " + executionTime + "\n");
+                    String executionTime = (result.timeExec < 1000 ? String.format("%.3f", result.timeExec) + " ms"
+                            : String.format("%.3f", (result.timeExec / 1000)) + " s");
+                    System.out.println(
+                            "Test " + currentTest + " / " + totalTests + " (" + fileName + ", " + initialTemperature
+                                    + ", " + coolingRate + ") - " + result.distance + " | " + executionTime + "\n");
                     currentTest++;
                 }
             }
 
-            //Apresenta os resultados por ordem do custo do melhor caminho e depois por ordem de tempo de execução
+            // Ordena os resultados por distância e tempo de execução
             results.sort((o1, o2) -> {
                 if (o1.distance < o2.distance) {
                     return -1;
@@ -86,7 +92,7 @@ public class ArgumentFinder {
                 }
             });
 
-            //Escreve os resultados para um ficheiro de texto
+            // Write the results to a text file
             BufferedWriter bw = getBufferedWriter(fileName, results);
             bw.close();
 
@@ -96,15 +102,18 @@ public class ArgumentFinder {
 
         Path filePath = Paths.get("results.csv");
 
-        try{
+        try {
             Files.delete(filePath);
         } catch (IOException e) {
             System.err.println("Error deleting the file: " + e.getMessage());
         }
         for (TestResult result : bestResults) {
-            System.out.println("A realizar os testes para o ficheiro: " + result.fileName + " (" + result.initialTemperature + " | " + result.coolingRate + ")");
+            System.out.println("A realizar os testes para o ficheiro: " + result.fileName + " ("
+                    + result.initialTemperature + " | " + result.coolingRate + ")");
             for (int i = 0; i < testAmount; i++) {
-                ProcessBuilder pb = new ProcessBuilder("java", "-cp", "out/production/java-tsp", "SimulatedAnnealingTSP", result.fileName, String.valueOf(result.threads), String.valueOf(time), String.valueOf(result.initialTemperature), String.valueOf(result.coolingRate));
+                ProcessBuilder pb = new ProcessBuilder("java", "-cp", "out/production/java-tsp",
+                        "SimulatedAnnealingTSP", result.fileName, String.valueOf(result.threads), String.valueOf(time),
+                        String.valueOf(result.initialTemperature), String.valueOf(result.coolingRate));
                 Process p = pb.start();
                 p.waitFor();
             }
@@ -120,7 +129,8 @@ public class ArgumentFinder {
             bw.newLine();
             bw.write("Custo medio do melhor caminho: " + result.distance);
             bw.newLine();
-            String executionTime = (result.timeExec < 1000 ? String.format("%.3f", result.timeExec) + " ms" : String.format("%.3f", (result.timeExec / 1000)) + " s");
+            String executionTime = (result.timeExec < 1000 ? String.format("%.3f", result.timeExec) + " ms"
+                    : String.format("%.3f", (result.timeExec / 1000)) + " s");
             bw.write("Tempo medio de execucao: " + executionTime);
             bw.newLine();
             bw.newLine();
@@ -146,21 +156,21 @@ public class ArgumentFinder {
             data.add(linha.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1));
         }
 
-        // 0: número do teste
-        // 1: nome do ficheiro
-        // 2: tempo
+        // 0: test number
+        // 1: file name
+        // 2: time
         // 3: threads
-        // 4: temperatura inicial
+        // 4: initial temperature
         // 5: cooling rate
-        // 6: melhor caminho
-        // 7: custo do melhor caminho
-        // 8: numero de iteracoes
-        // 9: tempo de execucao
+        // 6: best path
+        // 7: best path cost
+        // 8: number of iterations
+        // 9: execution time
 
-        //Calcula a média do custo do melhor caminho
+        // Calculate the average distance
         double distance = getDistance(data);
 
-        //Calcula a média do tempo de execução
+        // Calculate the average execution time
         double timeExec = 0;
         for (String[] lineData : data) {
             if (lineData[9].contains("ms")) {

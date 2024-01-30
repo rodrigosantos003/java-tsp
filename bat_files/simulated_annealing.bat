@@ -91,12 +91,12 @@ for /l %%i in (1,1,10) do (
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP dantzig42.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP dantzig42.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP att48.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP att48.txt 8 150 100000 0.9999999
     echo.
 )
 

@@ -14,7 +14,7 @@ public class Results {
     }
 
     public synchronized double getExecutionTime() {
-        return executionTime / 1_000_000.0; //Tempo convertido em milisegundos
+        return executionTime / 1_000_000.0; // Time in milliseconds
     }
 
     public synchronized void setExecutionTime(long executionTime) {
@@ -45,11 +45,10 @@ public class Results {
         this.iterations = iterations;
     }
 
-
     /**
-     * Escreve o tempo de execução
+     * Write the execution time in its respective units
      *
-     * @return Tempo de execução com respetivas unidades
+     * @return Execution time with its respective units
      */
     public String writeTime() {
         double value = getExecutionTime();

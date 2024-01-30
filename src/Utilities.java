@@ -5,10 +5,10 @@ import java.util.*;
 
 public class Utilities {
     /**
-     * Gera a matriz a partir de um ficheiro de texto
+     * Generates a matrix from a given textfile
      *
-     * @param fileName Nome do ficheiro
-     * @return Matriz inicializada
+     * @param fileName Name of the file
+     * @return Initialized matrix
      */
     static int[][] generateMatrix(String fileName) {
         int[][] matrix = new int[0][];
@@ -38,11 +38,11 @@ public class Utilities {
     }
 
     /**
-     * Calcula a distância de um dado caminho
+     * Calculates the distance of a given path
      *
-     * @param path      Caminho para calcular a distância
-     * @param distances Matriz de distâncias
-     * @return Valor da distância
+     * @param path      Path to calculate the distance
+     * @param distances Distances matrix
+     * @return Distance of the path
      */
     static int calculateDistance(int[] path, int[][] distances) {
         int totalDistance = 0;
@@ -57,10 +57,10 @@ public class Utilities {
     }
 
     /**
-     * Gera um caminho aleatório
+     * Generates a random path
      *
-     * @param size Tamanho do caminho
-     * @return Caminho aleatório
+     * @param size Size of the path
+     * @return Random path
      */
     static int[] generateRandomPath(int size, Random random) {
         int[] path = new int[size];
@@ -75,10 +75,10 @@ public class Utilities {
     }
 
     /**
-     * Baralha o array, garantindo que cada índice ocorre exatante uma vez
+     * Shuffles an array, ensuring that each element is in a different position
      *
-     * @param array Array a baralhar
-     * @param rand  Objeto Random
+     * @param array Array to shuffle
+     * @param rand  Random object
      */
     private static void shuffleArray(int[] array, Random rand) {
         for (int i = array.length - 1; i > 0; i--) {
@@ -90,11 +90,11 @@ public class Utilities {
     }
 
     /**
-     * Troca os elementos de um caminho
-     *
-     * @param path Caminho a trocar os elementos
-     * @param rand Objeto Random
-     * @return Caminho com elementos trocados
+     * Generates a random neighbor solution
+     * 
+     * @param path Path to generate the neighbor solution
+     * @param rand Random object
+     * @return Neighbor solution
      */
     static int[] elementRandomSwitch(int[] path, Random rand) {
         int[] neighborSolution = Arrays.copyOf(path, path.length);
@@ -111,10 +111,10 @@ public class Utilities {
     }
 
     /**
-     * Atualiza os valores dos resultados
-     *
-     * @param results Array de resultados
-     * @param thread  Thread a atualizar
+     * Updates the values of the results array
+     * 
+     * @param results Array of results
+     * @param thread  Thread to get the values
      */
     static void updateValues(Results[] results, TSPThread thread) {
         int index = thread.getThreadIndex();
@@ -127,9 +127,9 @@ public class Utilities {
     }
 
     /**
-     * Apresenta os resultados
-     *
-     * @param results Array de resultados
+     * Displays the results
+     * 
+     * @param results Array of results
      */
     static void showResults(Results[] results) {
         Arrays.sort(results, Comparator.comparing(Results::getDistance));
@@ -138,11 +138,11 @@ public class Utilities {
     }
 
     /**
-     * Exporta os resultados para um ficheiro CSV
-     *
-     * @param results Array de resultados
-     * @param args    Argumentos do programa
-     * @throws IOException Erro ao escrever no ficheiro
+     * Exports the results to a CSV file
+     * 
+     * @param results Array of results
+     * @param args    Arguments of the program
+     * @throws IOException
      */
     static void exportResults(Results[] results, String[] args) throws IOException {
         Arrays.sort(results, Comparator.comparing(Results::getDistance));

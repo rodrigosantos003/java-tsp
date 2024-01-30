@@ -93,7 +93,7 @@ for /l %%i in (1,1,10) do (
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau37.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau37.txt 8 30 1000 0.999999
     echo.
 )
 
@@ -108,7 +108,7 @@ for /l %%i in (1,1,10) do (
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau40.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau40.txt 8 30 1000 0.999999
     echo.
 )
 
@@ -118,86 +118,86 @@ for /l %%i in (1,1,10) do (
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau43.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau43.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau44.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau44.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau45.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau45.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau46.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau46.txt 8 30 10000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau47.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau47.txt 8 30 10000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau49.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau49.txt 8 30 10000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau50.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau50.txt 8 30 10000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau51.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau51.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau52.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau52.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau53.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau53.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau54.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau54.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau55.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau55.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau56.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau56.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau57.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau57.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau58.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau58.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau59.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau59.txt 8 30 1000 0.999999
     echo.
 )
 
 for /l %%i in (1,1,10) do (
-    java SimulatedAnnealingTSP ex_gau60.txt 8 10 1000 0.99999
+    java SimulatedAnnealingTSP ex_gau60.txt 8 30 1000 0.999999
     echo.
 )
